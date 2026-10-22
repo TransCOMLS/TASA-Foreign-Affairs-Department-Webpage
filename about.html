@@ -638,7 +638,7 @@ function renderOrg(){
     return (k?'<div class="org-stem" style="height:10px"></div>':'')+'<div class="cn"><b>'+esc(ptitle(q))+'</b>'+(nm.length?'<span class="who">'+esc(nm.join(', '))+'</span>':'')+(lang==='th'&&q.en?'<span class="en">'+esc(q.en)+'</span>':'')+'</div>';}).join('');
   $('orgdepts').innerHTML=ORG.depts.map(function(d){
     return '<li><button type="button" class="dept-btn" data-id="'+d.id+'" aria-pressed="false" aria-controls="orgpanel">'+(d.me?'<span class="mine">'+esc(o.mine)+'</span>':'')+
-      '<span class="ic">'+ICON+'</span><b>'+esc(dname(d))+'</b><small>'+esc(o.cnt(d.positions.length))+'</small></button></li>';}).join('');
+      '<span class="ic">'+ICON+'</span><b>'+esc(dname(d))+'</b></button></li>';}).join('');
   showOrg();
 }
 function showOrg(){
@@ -651,7 +651,7 @@ function showOrg(){
   list.forEach(function(q){var nm=pnames(q),key=nm.join('|');
     if(key&&idx[key]!==undefined){rows[idx[key]].titles.push(ptitle(q));}
     else{if(key)idx[key]=rows.length;rows.push({nm:nm,titles:[ptitle(q)],qty:q.qty});}});
-  $('orgpanel').innerHTML='<h3>'+esc(isOff?o.officeH+' ('+(lang==='en'?'SECOFF':ORG.office.abbr)+')':dname(d))+'</h3><p class="lead">'+(isOff?'':esc(o.posh)+' · ')+esc(o.cnt(list.length))+'</p><ul class="pos">'+
+  $('orgpanel').innerHTML='<h3>'+esc(isOff?o.officeH+' ('+(lang==='en'?'SECOFF':ORG.office.abbr)+')':dname(d))+'</h3>'+(isOff?'':'<p class="lead">'+esc(o.posh)+'</p>')+'<ul class="pos">'+
     rows.map(function(r){return '<li><span class="dot"></span><span class="nm">'+(r.nm.length?'<span class="who">'+esc(r.nm.join(', '))+'</span>':'')+
       r.titles.map(function(tt){return r.nm.length?'<small>'+esc(tt)+'</small>':esc(tt);}).join('')+'</span>'+(r.qty>1?'<span class="qty">× '+r.qty+'</span>':'')+'</li>';}).join('')+'</ul><p class="org-note">'+esc(o.note)+'</p>';
 }
