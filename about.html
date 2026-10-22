@@ -174,8 +174,13 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
 .cn b{color:var(--primary);font-weight:600}
 .cn .who{color:var(--ink);font-weight:500}
 .cn .en{color:var(--muted);font-size:12.5px}
-.org-depts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px 12px}
-.org-depts li{position:relative}
+.org-depts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.org-depts li{position:relative;padding-top:22px}
+.org-depts li::before{content:"";position:absolute;top:0;left:50%;width:2px;height:22px;background:var(--line)}
+.org-depts li::after{content:"";position:absolute;top:0;left:-6px;right:-6px;height:2px;background:var(--line)}
+.org-depts li:first-child::after{left:50%}
+.org-depts li:last-child::after{right:50%}
+@media (max-width:900px){.org-depts{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}.org-depts li{padding-top:0}.org-depts li::before,.org-depts li::after{display:none}}
 .dept-btn{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-family:var(--font);color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 10px 12px;cursor:pointer;position:relative}
 .dept-btn:hover{border-color:var(--accent);background:var(--soft)}
 .dept-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 3px rgba(43,108,176,.18)}
@@ -377,23 +382,30 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
      "th": "เจ้าหน้าที่ประสานงาน",
      "en": "Coordination Officer",
      "names": []
-    }
-   ]
-  },
-  {
-   "id": "fin",
-   "n": "ฝ่ายการเงิน",
-   "n_en": "Finance Department",
-   "a": "ฝกง.",
-   "positions": [
+    },
     {
-     "th": "หัวหน้าฝ่ายการเงิน",
-     "en": "Head of Finance",
+     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬา",
+     "en": "Sports Coordination Officer",
      "names": []
     },
     {
-     "th": "เจ้าหน้าที่การเงิน",
-     "en": "Finance Officer",
+     "th": "เจ้าหน้าที่ฝ่ายเทคนิคกีฬา",
+     "en": "Sports Technical Officer",
+     "names": []
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายสารบรรณ",
+     "en": "Correspondence Officer",
+     "names": []
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายประชาสัมพันธ์และกิจการสโมสร",
+     "en": "Public Relations and Club Affairs Officer",
+     "names": []
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายพัฒนาผู้ฝึกสอน",
+     "en": "Coach Development Officer",
      "names": []
     }
    ]
@@ -418,66 +430,19 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
    ]
   },
   {
-   "id": "spc",
-   "n": "ฝ่ายประสานงานกีฬา",
-   "n_en": "Sports Coordination Department",
-   "a": "",
+   "id": "fin",
+   "n": "ฝ่ายการเงิน",
+   "n_en": "Finance Department",
+   "a": "ฝกง.",
    "positions": [
     {
-     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬา",
-     "en": "Sports Coordination Officer",
+     "th": "หัวหน้าฝ่ายการเงิน",
+     "en": "Head of Finance",
      "names": []
-    }
-   ]
-  },
-  {
-   "id": "spt",
-   "n": "ฝ่ายเทคนิคกีฬา",
-   "n_en": "Sports Technical Department",
-   "a": "",
-   "positions": [
+    },
     {
-     "th": "เจ้าหน้าที่ฝ่ายเทคนิคกีฬา",
-     "en": "Sports Technical Officer",
-     "names": []
-    }
-   ]
-  },
-  {
-   "id": "rec",
-   "n": "ฝ่ายสารบรรณ",
-   "n_en": "Correspondence Department",
-   "a": "",
-   "positions": [
-    {
-     "th": "เจ้าหน้าที่ฝ่ายสารบรรณ",
-     "en": "Correspondence Officer",
-     "names": []
-    }
-   ]
-  },
-  {
-   "id": "pr",
-   "n": "ฝ่ายประชาสัมพันธ์และกิจการสโมสร",
-   "n_en": "Public Relations and Club Affairs Department",
-   "a": "",
-   "positions": [
-    {
-     "th": "เจ้าหน้าที่ฝ่ายประชาสัมพันธ์และกิจการสโมสร",
-     "en": "Public Relations and Club Affairs Officer",
-     "names": []
-    }
-   ]
-  },
-  {
-   "id": "coach",
-   "n": "ฝ่ายพัฒนาผู้ฝึกสอน",
-   "n_en": "Coach Development Department",
-   "a": "",
-   "positions": [
-    {
-     "th": "เจ้าหน้าที่ฝ่ายพัฒนาผู้ฝึกสอน",
-     "en": "Coach Development Officer",
+     "th": "เจ้าหน้าที่การเงิน",
+     "en": "Finance Officer",
      "names": []
     }
    ]
