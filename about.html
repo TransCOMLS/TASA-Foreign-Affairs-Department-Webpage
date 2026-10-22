@@ -191,7 +191,7 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
 .dept-btn small{color:var(--muted);font-size:12.5px}
 .dept-btn .mine{position:absolute;top:-11px;right:10px;background:var(--primary);color:var(--card);font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 10px}
 .org-panel{margin-top:16px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:12px;padding:16px 20px}
-.org-panel h3{margin:0 0 2px;font-size:18px;color:var(--primary)}
+.org-panel h3{margin:0 0 10px;font-size:18px;color:var(--primary)}
 .org-panel .lead{margin:0 0 10px}
 .pos{list-style:none;margin:0;padding:0;display:grid;gap:0}
 .pos li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
@@ -651,7 +651,7 @@ function showOrg(){
   list.forEach(function(q){var nm=pnames(q),key=nm.join('|');
     if(key&&idx[key]!==undefined){rows[idx[key]].titles.push(ptitle(q));}
     else{if(key)idx[key]=rows.length;rows.push({nm:nm,titles:[ptitle(q)],qty:q.qty});}});
-  $('orgpanel').innerHTML='<h3>'+esc(isOff?o.officeH+' ('+(lang==='en'?'SECOFF':ORG.office.abbr)+')':dname(d))+'</h3>'+(isOff?'':'<p class="lead">'+esc(o.posh)+'</p>')+'<ul class="pos">'+
+  $('orgpanel').innerHTML='<h3>'+esc(isOff?o.officeH+' ('+(lang==='en'?'SECOFF':ORG.office.abbr)+')':dname(d))+'</h3><ul class="pos">'+
     rows.map(function(r){return '<li><span class="dot"></span><span class="nm">'+(r.nm.length?'<span class="who">'+esc(r.nm.join(', '))+'</span>':'')+
       r.titles.map(function(tt){return r.nm.length?'<small>'+esc(tt)+'</small>':esc(tt);}).join('')+'</span>'+(r.qty>1?'<span class="qty">× '+r.qty+'</span>':'')+'</li>';}).join('')+'</ul><p class="org-note">'+esc(o.note)+'</p>';
 }
