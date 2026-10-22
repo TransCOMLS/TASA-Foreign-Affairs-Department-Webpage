@@ -162,42 +162,40 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
 
 
 /* org chart */
-.org-root{display:flex;justify-content:center}
-.org-node{display:inline-flex;align-items:center;gap:12px;background:var(--hd-a);color:#fff;border-radius:999px;padding:8px 22px 8px 8px;box-shadow:0 4px 14px rgba(15,35,60,.18)}
+.org-node{display:flex;align-items:center;gap:12px;background:var(--hd-a);color:#fff;border-radius:999px;padding:8px 24px 8px 8px;box-shadow:0 4px 14px rgba(15,35,60,.18);font-family:var(--font);border:2px solid transparent;cursor:pointer;text-align:left}
+.org-node[aria-pressed="true"]{border-color:#7fc4ee;box-shadow:0 0 0 3px rgba(127,196,238,.35),0 4px 14px rgba(15,35,60,.18)}
 .org-node .ic{flex:none;width:44px;height:44px;border-radius:50%;background:#1aa7e0;display:grid;place-items:center;color:#fff}
 .org-node b{display:block;font-size:17px;line-height:1.3}
-.org-node span{display:block;font-size:13px;color:var(--hd-sub)}
-.org-stem{width:2px;height:22px;background:var(--line);margin:0 auto}
-.org-depts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.org-depts li{position:relative;padding-top:22px}
-.org-depts li::before{content:"";position:absolute;top:0;left:50%;width:2px;height:22px;background:var(--line)}
-.org-depts li::after{content:"";position:absolute;top:0;left:-6px;right:-6px;height:2px;background:var(--line)}
-.org-depts li:first-child::after{left:50%}
-.org-depts li:last-child::after{right:50%}
-.dept-btn{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-family:var(--font);color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 10px 12px;cursor:pointer;position:relative}
+.org-node span.s{display:block;font-size:13px;color:var(--hd-sub)}
+.org-root{display:flex;justify-content:center}
+.org-stem{width:2px;height:18px;background:var(--line);margin:0 auto}
+.chain{display:flex;flex-direction:column;align-items:center}
+.cn{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;justify-content:center;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 20px;font-size:14px}
+.cn b{color:var(--primary);font-weight:600}
+.cn .who{color:var(--ink);font-weight:500}
+.cn .en{color:var(--muted);font-size:12.5px}
+.org-depts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px 12px}
+.org-depts li{position:relative}
+.dept-btn{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-family:var(--font);color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 10px 12px;cursor:pointer;position:relative}
 .dept-btn:hover{border-color:var(--accent);background:var(--soft)}
 .dept-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 3px rgba(43,108,176,.18)}
-.dept-btn .ic{width:44px;height:44px;border-radius:50%;background:#1aa7e0;color:#fff;display:grid;place-items:center}
-.dept-btn b{font-size:15px;line-height:1.35}
+.dept-btn .ic{width:40px;height:40px;border-radius:50%;background:#1aa7e0;color:#fff;display:grid;place-items:center}
+.dept-btn b{font-size:14.5px;line-height:1.35}
 .dept-btn small{color:var(--muted);font-size:12.5px}
 .dept-btn .mine{position:absolute;top:-11px;right:10px;background:var(--primary);color:var(--card);font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 10px}
 .org-panel{margin-top:16px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:12px;padding:16px 20px}
 .org-panel h3{margin:0 0 2px;font-size:18px;color:var(--primary)}
 .org-panel .lead{margin:0 0 10px}
 .pos{list-style:none;margin:0;padding:0;display:grid;gap:0}
-.pos li{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.pos li{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
 .pos li:first-child{border-top:0}
-.pos .dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.pos .dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-top:8px}
 .pos .nm{min-width:0;flex:1}
+.pos .nm .who{display:block;font-weight:600;color:var(--ink)}
 .pos .nm small{display:block;color:var(--muted);font-size:13px}
-.pos .qty{flex:none;font-size:12px;font-weight:700;background:var(--soft);color:var(--primary);border-radius:999px;padding:1px 10px}
+.pos .qty{flex:none;font-size:12px;font-weight:700;background:var(--soft);color:var(--primary);border-radius:999px;padding:1px 10px;margin-top:2px}
 .org-note{margin:10px 0 0;font-size:13px;color:var(--muted)}
-@media (max-width:900px){
-  .org-depts{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .org-depts li{padding-top:0}
-  .org-depts li::before,.org-depts li::after{display:none}
-}
-@media (max-width:480px){.org-depts{grid-template-columns:1fr}.org-node b{font-size:15px}}
+@media (max-width:480px){.org-depts{grid-template-columns:1fr}.org-node b{font-size:15px}.cn{border-radius:16px}}
 
 /* about page */
 .pagehead{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px}
@@ -257,8 +255,10 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
     <section aria-labelledby="h-org">
       <h2 id="h-org"></h2>
       <p class="lead" id="l-org"></p>
-      <div class="org-root"><div class="org-node"><span class="ic" id="orgic"></span><div><b id="orgrootT"></b><span id="orgrootS"></span></div></div></div>
-      <div class="org-stem" id="orgstem"></div>
+      <div class="org-root"><button type="button" class="org-node" id="orgroot" aria-pressed="false" aria-controls="orgpanel"><span class="ic" id="orgic"></span><span><b id="orgrootT"></b><span class="s" id="orgrootS"></span></span></button></div>
+      <div class="org-stem"></div>
+      <div class="chain" id="orgchain"></div>
+      <div class="org-stem"></div>
       <ul class="org-depts" id="orgdepts"></ul>
       <div class="org-panel" id="orgpanel" aria-live="polite"></div>
     </section>
@@ -312,6 +312,192 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
   </div>
 </footer>
 
+<script type="application/json" id="org-data">
+{
+ "office": {
+  "abbr": "สลธ.",
+  "abbr_en": "SECOFF",
+  "positions": [
+   {
+    "th": "เลขาธิการสมาคมฯ",
+    "en": "Secretary-General",
+    "names": []
+   },
+   {
+    "th": "ผู้อำนวยการสำนักงาน",
+    "en": "Office Director",
+    "names": []
+   },
+   {
+    "th": "รองผู้อำนวยการสำนักงาน",
+    "en": "Deputy Office Director",
+    "names": []
+   },
+   {
+    "th": "ผู้ช่วยผู้อำนวยการสำนักงาน",
+    "en": "Assistant Office Director",
+    "names": []
+   },
+   {
+    "th": "หัวหน้าสำนักงานฯ",
+    "en": "Head of Office",
+    "names": []
+   }
+  ]
+ },
+ "chain": [
+  1,
+  2,
+  3
+ ],
+ "depts": [
+  {
+   "id": "adm",
+   "n": "ฝ่ายธุรการ",
+   "n_en": "Administration Department",
+   "a": "ฝธก.",
+   "positions": [
+    {
+     "th": "หัวหน้าฝ่ายธุรการ",
+     "en": "Head of Administration",
+     "names": []
+    },
+    {
+     "th": "เจ้าหน้าที่ธุรการ",
+     "en": "Administrative Officer",
+     "qty": 3,
+     "names": []
+    },
+    {
+     "th": "พลขับรถ",
+     "en": "Driver",
+     "names": []
+    },
+    {
+     "th": "เจ้าหน้าที่ประสานงาน",
+     "en": "Coordination Officer",
+     "names": []
+    }
+   ]
+  },
+  {
+   "id": "fin",
+   "n": "ฝ่ายการเงิน",
+   "n_en": "Finance Department",
+   "a": "ฝกง.",
+   "positions": [
+    {
+     "th": "หัวหน้าฝ่ายการเงิน",
+     "en": "Head of Finance",
+     "names": []
+    },
+    {
+     "th": "เจ้าหน้าที่การเงิน",
+     "en": "Finance Officer",
+     "names": []
+    }
+   ]
+  },
+  {
+   "id": "fa",
+   "n": "ฝ่ายกิจการต่างประเทศ",
+   "n_en": "Foreign Affairs Department",
+   "a": "ฝตท.",
+   "me": 1,
+   "positions": [
+    {
+     "th": "หัวหน้าฝ่ายกิจการต่างประเทศ",
+     "en": "Head of International Relations",
+     "names": []
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายกิจการต่างประเทศ",
+     "en": "International Relations Officer",
+     "names": []
+    }
+   ]
+  },
+  {
+   "id": "spc",
+   "n": "ฝ่ายประสานงานกีฬา",
+   "n_en": "Sports Coordination Department",
+   "a": "",
+   "positions": [
+    {
+     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬา",
+     "en": "Sports Coordination Officer",
+     "names": []
+    }
+   ]
+  },
+  {
+   "id": "spt",
+   "n": "ฝ่ายเทคนิคกีฬา",
+   "n_en": "Sports Technical Department",
+   "a": "",
+   "positions": [
+    {
+     "th": "เจ้าหน้าที่ฝ่ายเทคนิคกีฬา",
+     "en": "Sports Technical Officer",
+     "names": []
+    }
+   ]
+  },
+  {
+   "id": "rec",
+   "n": "ฝ่ายสารบรรณ",
+   "n_en": "Correspondence Department",
+   "a": "",
+   "positions": [
+    {
+     "th": "เจ้าหน้าที่ฝ่ายสารบรรณ",
+     "en": "Correspondence Officer",
+     "names": []
+    }
+   ]
+  },
+  {
+   "id": "pr",
+   "n": "ฝ่ายประชาสัมพันธ์และกิจการสโมสร",
+   "n_en": "Public Relations and Club Affairs Department",
+   "a": "",
+   "positions": [
+    {
+     "th": "เจ้าหน้าที่ฝ่ายประชาสัมพันธ์และกิจการสโมสร",
+     "en": "Public Relations and Club Affairs Officer",
+     "names": []
+    }
+   ]
+  },
+  {
+   "id": "coach",
+   "n": "ฝ่ายพัฒนาผู้ฝึกสอน",
+   "n_en": "Coach Development Department",
+   "a": "",
+   "positions": [
+    {
+     "th": "เจ้าหน้าที่ฝ่ายพัฒนาผู้ฝึกสอน",
+     "en": "Coach Development Officer",
+     "names": []
+    }
+   ]
+  },
+  {
+   "id": "exec",
+   "n": "ธุรการประจำคณะกรรมการบริหาร",
+   "n_en": "Executive Committee Secretariat",
+   "a": "",
+   "positions": [
+    {
+     "th": "ประจำสำนักงาน",
+     "en": "Office-based staff",
+     "names": []
+    }
+   ]
+  }
+ ]
+}
+</script>
 <script>
 (function(){
 var $=function(i){return document.getElementById(i);};
@@ -328,11 +514,7 @@ th:{
   eyebrow:'Foreign Affairs Department',
   h1:'เกี่ยวกับฝ่ายกิจการต่างประเทศ',
   intro:'ฝ่ายกิจการต่างประเทศ สมาคมกีฬาทางน้ำแห่งประเทศไทย ทำหน้าที่ประสานงานด้านกีฬาทางน้ำกับต่างประเทศ รวบรวมและเผยแพร่ข้อมูลการแข่งขันนานาชาติเพื่อประโยชน์ต่อสมาคมสมาชิก นักกีฬา และเจ้าหน้าที่',
-  org:{h:'โครงสร้างสำนักงานเลขาธิการ',l:'เลือกฝ่ายเพื่อดูตำแหน่งงานในฝ่าย',rootT:'สำนักงานเลขาธิการ (สลธ.)',rootS:'ลธ.ส.ว.ท. เป็นหัวหน้า',mine:'ฝ่ายของเรา',cnt:function(n){return n+' ตำแหน่ง';},posh:'ตำแหน่งในฝ่าย',note:'แสดงตำแหน่งตามโครงสร้างสำนักงานเลขาธิการ',
-    d:[{n:'ฝ่ายธุรการ',a:'ฝธก.',p:[['หัวหน้าฝ่ายธุรการ'],['เจ้าหน้าที่ธุรการ',3],['พลขับรถ'],['เจ้าหน้าที่ประสานงาน']]},
-       {n:'ฝ่ายกิจการต่างประเทศ',a:'ฝตท.',me:1,p:[['หัวหน้าฝ่ายต่างประเทศ'],['เจ้าหน้าที่ต่างประเทศ']]},
-       {n:'ฝ่ายการเงิน',a:'ฝกง.',p:[['หัวหน้าฝ่ายการเงิน'],['เจ้าหน้าที่การเงิน']]},
-       {n:'ธุรการประจำคณะกรรมการบริหาร',a:'',p:[['ประจำสำนักงาน']]}]},
+  org:{h:'โครงสร้างสำนักงานเลขาธิการ',l:'เลือกสำนักงานหรือฝ่ายเพื่อดูตำแหน่งและผู้ดำรงตำแหน่ง',rootT:'สำนักงานเลขาธิการ (สลธ.)',rootS:'SECOFF · ลธ.สนท. เป็นหัวหน้า',mine:'ฝ่ายของเรา',cnt:function(n){return n+' ตำแหน่ง';},officeH:'ตำแหน่งประจำสำนักงานเลขาธิการ',posh:'ตำแหน่งในฝ่าย',note:'แสดงตำแหน่งตามโครงสร้างสำนักงานเลขาธิการ',chainH:'ผู้บริหารระดับสำนักงาน'},
   hRole:'บทบาทหน้าที่',lRole:'งานหลักของฝ่ายฯ ด้านความสัมพันธ์และข้อมูลระหว่างประเทศ',
   roles:[['ประสานงานกับสหพันธ์','ติดต่อ World Aquatics และสหพันธ์กีฬาทางน้ำระดับทวีป ในนามของสมาคมฯ'],['รวบรวมกำหนดการแข่งขัน','ติดตามปฏิทินและรายการแข่งขันนานาชาติทั้ง 6 ชนิดกีฬา ตั้งแต่ระดับโลกจนถึงรายการที่สหพันธ์สมาชิกจัด'],['เผยแพร่ข้อมูล','แจ้งรายละเอียดรายการแข่งขัน สถานที่ และข้อมูลติดต่อผู้จัด ผ่านปฏิทินการแข่งขันนานาชาติ'],['สนับสนุนการเข้าร่วม','ให้ข้อมูลประกอบการพิจารณาส่งนักกีฬาและเจ้าหน้าที่เข้าร่วมรายการต่างประเทศ']],
   hSp:'ชนิดกีฬาที่ติดตาม',lSp:'ครอบคลุม 6 ชนิดกีฬา ตามประเภทการแข่งขันของ World Aquatics',
@@ -354,11 +536,7 @@ en:{
   eyebrow:'Foreign Affairs Department',
   h1:'About the Foreign Affairs Department',
   intro:'The Foreign Affairs Department of the Thailand Aquatic Sports Association coordinates international aquatic sports matters, and compiles and shares information on international competitions for member associations, athletes and officials.',
-  org:{h:'Secretariat structure',l:'Select a department to see its positions',rootT:'Secretariat Office (สลธ.)',rootS:'Headed by ลธ.ส.ว.ท.',mine:'Our department',cnt:function(n){return n+(n===1?' position':' positions');},posh:'Positions',note:'Positions shown follow the Secretariat structure.',
-    d:[{n:'Administration Department',a:'ฝธก.',p:[['Head of Administration'],['Administrative Officer',3],['Driver'],['Coordination Officer']]},
-       {n:'Foreign Affairs Department',a:'ฝตท.',me:1,p:[['Head of Foreign Affairs'],['Foreign Affairs Officer']]},
-       {n:'Finance Department',a:'ฝกง.',p:[['Head of Finance'],['Finance Officer']]},
-       {n:'Executive Committee Secretariat',a:'',p:[['Office-based staff']]}]},
+  org:{h:'Secretariat structure',l:'Select the Secretariat Office or a department to see positions and post-holders',rootT:'Secretariat Office (SECOFF)',rootS:'Headed by the Secretary-General (ลธ.สนท.)',mine:'Our department',cnt:function(n){return n+(n===1?' position':' positions');},officeH:'Secretariat Office positions',posh:'Positions',note:'Positions shown follow the Secretariat structure.',chainH:'Office-level management'},
   hRole:'Roles and responsibilities',lRole:'The department’s main work in international relations and information',
   roles:[['Federation liaison','Communicates with World Aquatics and the continental aquatics federations on behalf of the association'],['Schedule tracking','Follows the calendar and international competitions across all 6 disciplines, from world level to events hosted by member federations'],['Information sharing','Provides event details, venues and organiser contacts through the International Competition Calendar'],['Participation support','Supplies information to help decide on sending athletes and officials to international events']],
   hSp:'Disciplines we follow',lSp:'Six disciplines, following the World Aquatics competition categories',
@@ -377,25 +555,33 @@ function t(){return T[lang];}
 
 
 var ICON='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><circle cx="12" cy="8" r="3.2" fill="currentColor"/><path d="M5.5 19c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8z" fill="currentColor"/><circle cx="5.2" cy="9.6" r="2.2" fill="currentColor" opacity=".75"/><circle cx="18.8" cy="9.6" r="2.2" fill="currentColor" opacity=".75"/></svg>';
-var selDept=1;
+var ORG=null;try{ORG=JSON.parse($('org-data').textContent);}catch(e){ORG={office:{positions:[]},chain:[],depts:[]};}
+var sel='fa'; /* 'office' or a department id */
+function pt(o,k){return lang==='en'?(o[k+'_en']||o[k]||''):(o[k]||'');}
+function ptitle(q){return lang==='en'?(q.en||q.th):q.th;}
+function pnames(q){return (q.names||[]).map(function(n){return lang==='en'?(n.en||n.th):n.th;}).filter(Boolean);}
+function dname(d){return pt(d,'n')+(d.a&&lang==='th'?' ('+d.a+')':'');}
 function renderOrg(){
   var o=t().org;
   $('h-org').textContent=o.h;$('l-org').textContent=o.l;$('orgrootT').textContent=o.rootT;$('orgrootS').textContent=o.rootS;$('orgic').innerHTML=ICON;
-  $('orgdepts').innerHTML=o.d.map(function(d,i){
-    return '<li><button type="button" class="dept-btn" data-i="'+i+'" aria-pressed="'+(i===selDept)+'" aria-controls="orgpanel">'+(d.me?'<span class="mine">'+esc(o.mine)+'</span>':'')+
-      '<span class="ic">'+ICON+'</span><b>'+esc(d.n)+(d.a?' ('+esc(d.a)+')':'')+'</b><small>'+esc(o.cnt(d.p.length))+'</small></button></li>';}).join('');
-  showDept();
+  $('orgchain').innerHTML=ORG.chain.map(function(i,k){var q=ORG.office.positions[i],nm=pnames(q);
+    return (k?'<div class="org-stem" style="height:10px"></div>':'')+'<div class="cn"><b>'+esc(ptitle(q))+'</b>'+(nm.length?'<span class="who">'+esc(nm.join(', '))+'</span>':'')+(lang==='th'&&q.en?'<span class="en">'+esc(q.en)+'</span>':'')+'</div>';}).join('');
+  $('orgdepts').innerHTML=ORG.depts.map(function(d){
+    return '<li><button type="button" class="dept-btn" data-id="'+d.id+'" aria-pressed="false" aria-controls="orgpanel">'+(d.me?'<span class="mine">'+esc(o.mine)+'</span>':'')+
+      '<span class="ic">'+ICON+'</span><b>'+esc(dname(d))+'</b><small>'+esc(o.cnt(d.positions.length))+'</small></button></li>';}).join('');
+  showOrg();
 }
-function showDept(){
-  var o=t().org,d=o.d[selDept];
-  $('orgpanel').innerHTML='<h3>'+esc(d.n)+(d.a?' ('+esc(d.a)+')':'')+'</h3><p class="lead">'+esc(o.posh)+' · '+esc(o.cnt(d.p.length))+'</p><ul class="pos">'+
-    d.p.map(function(q){return '<li><span class="dot"></span><span class="nm">'+esc(q[0])+(q[2]?'<small>'+esc(q[2])+'</small>':'')+'</span>'+(q[1]>1?'<span class="qty">× '+q[1]+'</span>':'')+'</li>';}).join('')+'</ul><p class="org-note">'+esc(o.note)+'</p>';
+function showOrg(){
+  var o=t().org,isOff=sel==='office',d=isOff?null:ORG.depts.filter(function(x){return x.id===sel;})[0]||ORG.depts[0];
+  var list=isOff?ORG.office.positions:d.positions;
+  $('orgroot').setAttribute('aria-pressed',isOff?'true':'false');
+  Array.prototype.forEach.call(document.querySelectorAll('.dept-btn'),function(x){x.setAttribute('aria-pressed',(!isOff&&x.dataset.id===d.id)?'true':'false');});
+  $('orgpanel').innerHTML='<h3>'+esc(isOff?o.officeH+' ('+(lang==='en'?'SECOFF':ORG.office.abbr)+')':dname(d))+'</h3><p class="lead">'+(isOff?'':esc(o.posh)+' · ')+esc(o.cnt(list.length))+'</p><ul class="pos">'+
+    list.map(function(q){var nm=pnames(q);return '<li><span class="dot"></span><span class="nm">'+(nm.length?'<span class="who">'+esc(nm.join(', '))+'</span><small>'+esc(ptitle(q))+'</small>':esc(ptitle(q)))+'</span>'+(q.qty>1?'<span class="qty">× '+q.qty+'</span>':'')+'</li>';}).join('')+'</ul><p class="org-note">'+esc(o.note)+'</p>';
 }
 document.addEventListener('click',function(ev){
-  var b=ev.target.closest&&ev.target.closest('.dept-btn');if(!b)return;
-  selDept=+b.dataset.i;
-  Array.prototype.forEach.call(document.querySelectorAll('.dept-btn'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
-  showDept();
+  var r=ev.target.closest&&ev.target.closest('#orgroot'),b=ev.target.closest&&ev.target.closest('.dept-btn');
+  if(r){sel='office';showOrg();}else if(b){sel=b.dataset.id;showOrg();}
 });
 function render(){
   var x=t();document.documentElement.lang=lang;document.title=x.title;
