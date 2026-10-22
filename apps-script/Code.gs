@@ -39,14 +39,20 @@ var ALLOWED_EXT = {
   zip: 1
 };
 
+// รายงานรายเรื่อง (สร้างจากเมนู TASA Integrity ใน Google Sheet)
+var REPORT_FONT = 'Sarabun';       // ฟอนต์ไทยที่ Google Docs มีให้ (แทน TH Sarabun New)
+var MAX_REPORTS_PER_RUN = 15;      // จำนวนรายงานสูงสุดต่อการกด 1 ครั้ง (ข้อจำกัดเวลาของ Apps Script)
+
 var FILES_HEADER = 'ไฟล์หลักฐาน (Google Drive)';
+var REPORT_HEADER = 'รายงานเรื่อง (Doc | PDF)';
 var HEADERS = [
   'เวลาที่รับ (เวลาไทย)', 'หมายเลขอ้างอิง', 'ไม่ระบุตัวตน', 'ประเภทเรื่อง', 'ลักษณะการกระทำ',
   'รายละเอียดเหตุการณ์', 'วันหรือช่วงเวลาที่เกิดเหตุ', 'รายการแข่งขันหรืองานที่เกี่ยวข้อง', 'สถานที่',
   'ผู้เยาว์เกี่ยวข้อง', 'มีผู้เสี่ยงอันตรายขณะนี้', 'ผู้ถูกกล่าวถึง', 'สถานะของผู้ถูกกล่าวถึง',
   'หลักฐานที่มี', 'ลิงก์หลักฐาน', FILES_HEADER, 'ชื่อผู้แจ้ง', 'ความสัมพันธ์กับเรื่อง', 'ช่องทางติดต่อ',
   'ยินยอมเปิดเผยตัวตน', 'ภาษาที่ใช้กรอก', 'ข้อสังเกตจากระบบ',
-  'สถานะดำเนินการ (เจ้าหน้าที่กรอก)', 'ผู้รับผิดชอบ (เจ้าหน้าที่กรอก)', 'บันทึกของเจ้าหน้าที่'
+  'สถานะดำเนินการ (เจ้าหน้าที่กรอก)', 'ผู้รับผิดชอบ (เจ้าหน้าที่กรอก)', 'บันทึกของเจ้าหน้าที่',
+  REPORT_HEADER
 ];
 var FILES_COL = 16; // ตำแหน่งคอลัมน์ไฟล์หลักฐาน (นับจาก 1)
 
@@ -280,6 +286,226 @@ function attachFiles_(list, ref) {
   return { url: folder.getUrl(), count: ok.length, text: ok.length + ' ไฟล์: ' + names.join('; ') };
 }
 
+/* ---------- รายงานรายเรื่อง (เมนู TASA Integrity ใน Google Sheet) ---------- */
+
+function onOpen() {
+  SpreadsheetApp.getUi().createMenu('TASA Integrity')
+    .addItem('สร้างรายงานของเรื่องที่เลือก', 'generateSelectedReports')
+    .addItem('สร้างรายงานของเรื่องที่ยังไม่มีรายงาน', 'generateMissingReports')
+    .addToUi();
+}
+
+// สร้างรายงานของแถวที่คลิกเลือกอยู่ (เลือกได้หลายแถว)
+function generateSelectedReports() {
+  var sh = SpreadsheetApp.getActiveSheet();
+  if (sh.getName() !== SHEET_NAME) {
+    SpreadsheetApp.getUi().alert('โปรดเปิดแท็บ "' + SHEET_NAME + '" แล้วคลิกเลือกแถวของเรื่องที่ต้องการ');
+    return;
+  }
+  var rng = sh.getActiveRange(), rows = [];
+  for (var r = Math.max(2, rng.getRow()); r < rng.getRow() + rng.getNumRows(); r++) rows.push(r);
+  runReports_(sh, rows);
+}
+
+// สร้างรายงานของทุกเรื่องที่ยังไม่มีรายงาน
+function generateMissingReports() {
+  var sh = getSheet_(), last = sh.getLastRow(), rows = [];
+  if (last >= 2) {
+    var repCol = HEADERS.indexOf(REPORT_HEADER) + 1;
+    var refs = sh.getRange(2, 2, last - 1, 1).getValues(), reps = sh.getRange(2, repCol, last - 1, 1).getValues();
+    for (var i = 0; i < refs.length; i++) if (refs[i][0] && !reps[i][0]) rows.push(i + 2);
+  }
+  runReports_(sh, rows);
+}
+
+function runReports_(sh, rows) {
+  var ui = SpreadsheetApp.getUi();
+  if (!rows.length) { ui.alert('ไม่พบเรื่องที่ต้องสร้างรายงาน'); return; }
+  var todo = rows.slice(0, MAX_REPORTS_PER_RUN), ok = [], fail = [];
+  todo.forEach(function (r) {
+    try { ok.push(makeReport_(sh, r)); } catch (e) { fail.push('แถว ' + r + ': ' + e.message); }
+  });
+  var msg = 'สร้างรายงานสำเร็จ ' + ok.length + ' เรื่อง' + (ok.length ? '\n' + ok.join('\n') : '');
+  if (rows.length > todo.length) msg += '\n\nเหลืออีก ' + (rows.length - todo.length) + ' เรื่อง กดเมนูอีกครั้งเพื่อสร้างต่อ';
+  if (fail.length) msg += '\n\nไม่สำเร็จ:\n' + fail.join('\n');
+  msg += '\n\nไฟล์ (Google Doc และ PDF) อยู่ในโฟลเดอร์ของเรื่องนั้นใน Google Drive และมีลิงก์ในคอลัมน์ "' + REPORT_HEADER + '"';
+  ui.alert('รายงานเรื่องร้องเรียน', msg, ui.ButtonSet.OK);
+}
+
+function makeReport_(sh, r) {
+  var hdr = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+  var row = sh.getRange(r, 1, 1, hdr.length).getValues()[0], c = {};
+  hdr.forEach(function (h, i) { c[h] = row[i]; });
+  var ref = String(c['หมายเลขอ้างอิง'] || '').trim();
+  if (!ref) throw new Error('แถวนี้ไม่มีหมายเลขอ้างอิง');
+
+  var folder = caseFolder_(ref);
+  var built = buildReportDoc_(c, ref, folder);
+
+  var text = 'Doc | PDF';
+  var rich = SpreadsheetApp.newRichTextValue().setText(text)
+    .setLinkUrl(0, 3, built.docUrl).setLinkUrl(6, 9, built.pdfUrl).build();
+  sh.getRange(r, HEADERS.indexOf(REPORT_HEADER) + 1).setRichTextValue(rich);
+  return ref;
+}
+
+function caseFolder_(ref) {
+  var root = DriveApp.getFolderById(getFolders_().rootId);
+  var it = root.getFoldersByName(ref);
+  return it.hasNext() ? it.next() : root.createFolder(ref);
+}
+
+function buildReportDoc_(c, ref, folder) {
+  var now = new Date();
+  var name = 'รายงานเรื่องร้องเรียน ' + ref + ' (' + Utilities.formatDate(now, TZ, 'yyMMdd-HHmm') + ')';
+
+  // รายการไฟล์หลักฐานของเรื่องนี้ (ทำก่อนสร้างรายงาน เพื่อไม่ให้ปนกับไฟล์รายงาน)
+  var evidence = [], fit = folder.getFiles();
+  while (fit.hasNext()) {
+    var f = fit.next();
+    if (f.getName().indexOf('รายงานเรื่องร้องเรียน') !== 0) evidence.push({ name: f.getName(), size: f.getSize(), url: f.getUrl() });
+  }
+
+  var doc = DocumentApp.create(name);
+  var body = doc.getBody();
+  body.clear();
+  body.setPageWidth(595.28).setPageHeight(841.89).setMarginTop(56).setMarginBottom(56).setMarginLeft(64).setMarginRight(64);
+  body.setAttributes(style_({ size: 14 }));
+
+  var hp = doc.addHeader().getParagraphs()[0];
+  hp.setText('เอกสารลับ: เฉพาะผู้มีหน้าที่พิจารณาเรื่องร้องเรียนเท่านั้น');
+  hp.setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
+  hp.setAttributes(style_({ size: 11, color: '#9b2c2c', bold: true }));
+
+  centered_(body, 'สมาคมกีฬาทางน้ำแห่งประเทศไทย', 16, true, '#1a365d');
+  centered_(body, 'ฝ่ายกิจการต่างประเทศ', 14, false, '#1a365d');
+  centered_(body, 'รายงานข้อมูลการแจ้งเรื่องร้องเรียนด้านความเป็นธรรมทางกีฬา', 18, true, '#000000').setSpacingBefore(10);
+  centered_(body, 'หมายเลขอ้างอิง ' + ref, 15, true, '#2b6cb0').setSpacingAfter(10);
+
+  var anon = String(c['ไม่ระบุตัวตน'] || '') === 'ใช่';
+  var cats = splitList_(c['ประเภทเรื่อง']), subs = splitList_(c['ลักษณะการกระทำ']);
+
+  section_(body, '1. ข้อมูลการรับเรื่อง', [
+    ['วันและเวลาที่รับเรื่อง', thaiDateTime_(c['เวลาที่รับ (เวลาไทย)'])],
+    ['สถานะดำเนินการ', c['สถานะดำเนินการ (เจ้าหน้าที่กรอก)']],
+    ['ผู้รับผิดชอบ', c['ผู้รับผิดชอบ (เจ้าหน้าที่กรอก)']],
+    ['ภาษาที่ใช้กรอก', c['ภาษาที่ใช้กรอก']]
+  ]);
+  section_(body, '2. ประเภทและลักษณะของเรื่อง', [
+    ['ประเภทเรื่อง', bullets_(cats)],
+    ['ลักษณะการกระทำ', bullets_(subs)],
+    ['มีผู้เสี่ยงอันตรายขณะนี้', c['มีผู้เสี่ยงอันตรายขณะนี้']],
+    ['ผู้เยาว์เกี่ยวข้อง', c['ผู้เยาว์เกี่ยวข้อง']]
+  ]);
+  section_(body, '3. รายละเอียดเหตุการณ์', [
+    ['รายละเอียด', c['รายละเอียดเหตุการณ์']],
+    ['วันหรือช่วงเวลาที่เกิดเหตุ', c['วันหรือช่วงเวลาที่เกิดเหตุ']],
+    ['รายการแข่งขันหรืองานที่เกี่ยวข้อง', c['รายการแข่งขันหรืองานที่เกี่ยวข้อง']],
+    ['สถานที่', c['สถานที่']]
+  ]);
+
+  var fileLines = evidence.map(function (e) { return e.name + ' (' + fmtSize_(e.size) + ')'; });
+  var evTable = section_(body, '4. ผู้ถูกกล่าวถึงและหลักฐาน', [
+    ['ผู้ถูกกล่าวถึง', c['ผู้ถูกกล่าวถึง']],
+    ['สถานะของผู้ถูกกล่าวถึง', c['สถานะของผู้ถูกกล่าวถึง']],
+    ['หลักฐานที่ผู้แจ้งระบุ', c['หลักฐานที่มี']],
+    ['ลิงก์หลักฐาน', c['ลิงก์หลักฐาน']],
+    ['ไฟล์หลักฐานที่แนบ (' + evidence.length + ' ไฟล์)', fileLines.join('\n')]
+  ]);
+  // ใส่ลิงก์เปิดไฟล์แต่ละบรรทัดในช่องไฟล์หลักฐาน
+  if (evidence.length) {
+    var tx = evTable.getCell(4, 1).editAsText(), pos = 0;
+    evidence.forEach(function (e, i) {
+      tx.setLinkUrl(pos, pos + fileLines[i].length - 1, e.url);
+      pos += fileLines[i].length + 1;
+    });
+  }
+
+  section_(body, '5. ข้อมูลผู้แจ้ง', anon
+    ? [['การระบุตัวตน', 'แจ้งโดยไม่ระบุตัวตน']]
+    : [['การระบุตัวตน', 'แจ้งโดยระบุตัวตน'],
+       ['ชื่อ-นามสกุล', c['ชื่อผู้แจ้ง']],
+       ['ความสัมพันธ์กับเรื่อง', c['ความสัมพันธ์กับเรื่อง']],
+       ['ช่องทางติดต่อ', c['ช่องทางติดต่อ']],
+       ['ความยินยอมให้เปิดเผยตัวตน', c['ยินยอมเปิดเผยตัวตน'] ? 'ยินยอมให้เปิดเผยเฉพาะเมื่อจำเป็นต่อการสอบสวน' : 'ไม่ได้ให้ความยินยอม']]);
+
+  section_(body, '6. บันทึกของเจ้าหน้าที่', [
+    ['บันทึก', c['บันทึกของเจ้าหน้าที่']],
+    ['ข้อสังเกตจากระบบ', c['ข้อสังเกตจากระบบ']]
+  ]);
+
+  var note = body.appendParagraph('รายงานนี้จัดทำจากข้อมูลที่ผู้แจ้งกรอกผ่านระบบรับเรื่องของสมาคมฯ เมื่อวันที่ ' +
+    thaiDateTime_(Utilities.formatDate(now, TZ, 'yyyy-MM-dd HH:mm:ss')) +
+    ' ข้อมูลดังกล่าวยังมิได้ผ่านการตรวจสอบข้อเท็จจริง');
+  note.setAttributes(style_({ size: 12, color: '#555555' })).setSpacingBefore(14);
+
+  try { // ลบย่อหน้าว่างแรกสุดที่ body.clear() ทิ้งไว้
+    var first = body.getChild(0);
+    if (first.getType() === DocumentApp.ElementType.PARAGRAPH && first.asParagraph().getText() === '') body.removeChild(first);
+  } catch (e) { /* ปล่อยไว้ได้ ไม่กระทบเนื้อหา */ }
+
+  doc.saveAndClose();
+  var docFile = DriveApp.getFileById(doc.getId());
+  docFile.moveTo(folder);
+  var pdf = folder.createFile(docFile.getAs('application/pdf')).setName(name + '.pdf');
+  return { docUrl: docFile.getUrl(), pdfUrl: pdf.getUrl() };
+}
+
+function style_(o) {
+  var s = {};
+  s[DocumentApp.Attribute.FONT_FAMILY] = REPORT_FONT;
+  s[DocumentApp.Attribute.FONT_SIZE] = o.size || 14;
+  s[DocumentApp.Attribute.BOLD] = !!o.bold;
+  s[DocumentApp.Attribute.FOREGROUND_COLOR] = o.color || '#000000';
+  return s;
+}
+
+function centered_(body, text, size, bold, color) {
+  var p = body.appendParagraph(text);
+  p.setAlignment(DocumentApp.HorizontalAlignment.CENTER);
+  p.setAttributes(style_({ size: size, bold: bold, color: color }));
+  return p;
+}
+
+// หัวข้อ + ตาราง 2 คอลัมน์ (ชื่อรายการ | ข้อมูล) คืนค่าตารางเพื่อใส่ลิงก์เพิ่มได้
+function section_(body, title, pairs) {
+  var h = body.appendParagraph(title);
+  h.setHeading(DocumentApp.ParagraphHeading.HEADING2);
+  h.setAttributes(style_({ size: 15, bold: true, color: '#1a365d' }));
+  h.setSpacingBefore(12).setSpacingAfter(4);
+  var cells = pairs.map(function (p) {
+    var v = p[1] == null ? '' : String(p[1]).trim();
+    return [p[0], v || '-'];
+  });
+  var t = body.appendTable(cells);
+  t.setColumnWidth(0, 150);
+  t.setBorderColor('#cbd5e0');
+  for (var i = 0; i < cells.length; i++) {
+    var l = t.getCell(i, 0);
+    l.setBackgroundColor('#eef3f9');
+    l.editAsText().setFontFamily(REPORT_FONT).setFontSize(13).setBold(true).setForegroundColor('#1a365d');
+    t.getCell(i, 1).editAsText().setFontFamily(REPORT_FONT).setFontSize(13).setBold(false).setForegroundColor('#000000');
+  }
+  return t;
+}
+
+function splitList_(v) {
+  return String(v || '').split(';').map(function (x) { return x.trim(); }).filter(String);
+}
+
+function bullets_(arr) {
+  return arr.length ? arr.map(function (x) { return '• ' + x; }).join('\n') : '';
+}
+
+// 'yyyy-MM-dd HH:mm:ss' (หรือ Date) -> '22 ตุลาคม 2569 เวลา 21.05 น.'
+function thaiDateTime_(v) {
+  var months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+  if (v instanceof Date) v = Utilities.formatDate(v, TZ, 'yyyy-MM-dd HH:mm:ss');
+  var m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(String(v || ''));
+  if (!m) return String(v || '');
+  return Number(m[3]) + ' ' + months[Number(m[2]) - 1] + ' ' + (Number(m[1]) + 543) + ' เวลา ' + m[4] + '.' + m[5] + ' น.';
+}
+
 /* ---------- เครื่องมือช่วย ---------- */
 
 function getFolders_() {
@@ -299,11 +525,16 @@ function getSheet_() {
     sh = ss.insertSheet(SHEET_NAME);
     writeHeaders_(sh);
     sh.getRange(2, 6, 1000, 1).setWrap(true);
-  } else if (sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].indexOf(FILES_HEADER) < 0) {
-    // อัปเกรด Sheet เดิม: เพิ่มคอลัมน์ไฟล์หลักฐานก่อนคอลัมน์ "ชื่อผู้แจ้ง"
-    var idx = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].indexOf('ชื่อผู้แจ้ง');
-    if (idx > -1) sh.insertColumnBefore(idx + 1);
-    writeHeaders_(sh);
+  } else {
+    var hdr = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
+    if (hdr.indexOf(FILES_HEADER) < 0) {
+      // อัปเกรด Sheet เดิม: เพิ่มคอลัมน์ไฟล์หลักฐานก่อนคอลัมน์ "ชื่อผู้แจ้ง"
+      var idx = hdr.indexOf('ชื่อผู้แจ้ง');
+      if (idx > -1) sh.insertColumnBefore(idx + 1);
+      writeHeaders_(sh);
+    } else if (hdr.indexOf(REPORT_HEADER) < 0) {
+      writeHeaders_(sh); // เพิ่มคอลัมน์รายงานต่อท้าย
+    }
   }
   return sh;
 }
