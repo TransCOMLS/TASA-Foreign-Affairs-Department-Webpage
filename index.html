@@ -74,7 +74,8 @@ button:focus-visible,select:focus-visible,.ev:focus-visible,.chip:focus-visible,
 .ev.ce{border-top-right-radius:0;border-bottom-right-radius:0;margin-right:0}
 .ev.tbc{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px)}
 .ev.hl{filter:brightness(1.2) saturate(1.1);box-shadow:0 0 0 2px var(--ink) inset}
-.ev.dim,.chip.dim{opacity:.12;pointer-events:none}
+.ev.dim{opacity:.12;pointer-events:none}
+.chip.dim{display:none}
 .chips{display:flex;flex-direction:column;gap:6px;margin-top:14px;align-items:flex-start}
 .chips h3{margin:0;font-size:13px;color:var(--muted);font-weight:600}
 .chip{font-size:13px;padding:3px 12px;border-radius:999px;color:#fff;font-weight:500;cursor:pointer;border:0;font-family:var(--font);text-align:left}
@@ -112,7 +113,7 @@ body.vl .dow,body.vl .week{display:none}
 .item .tg{grid-column:2;grid-row:1;align-self:start;font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:6px;padding:0 7px}
 .item .m{grid-column:1/3;color:var(--muted);font-weight:400;font-size:13px}
 .item .m .w{color:var(--warn);font-weight:600}
-.item.dim{opacity:.12;pointer-events:none}
+.item.dim{display:none}
 .list .none{margin:0;color:var(--muted)}
 @media (max-width:640px){.org-name{font-size:19px}.logo-img{height:84px}.hd-in{flex-direction:column;text-align:center}.logo-area{flex-direction:column;gap:8px}.wrap{padding-block:16px 28px}main{padding:16px 12px}h1{font-size:23px}.ev{font-size:10.5px;padding:2px 4px}.ev b{display:none}.month{padding:10px 8px}.day span{width:22px;height:22px;font-size:12px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -431,7 +432,13 @@ function show(m){
   Array.prototype.forEach.call(cal.children,function(s){s.classList.toggle('on',+s.dataset.m===cur);});
   $('prev').disabled=cur%12===0;$('next').disabled=cur%12===11;$('y0').setAttribute('aria-pressed',cur<12?'true':'false');$('y1').setAttribute('aria-pressed',cur>=12?'true':'false');hidePop(true);
 }
-function applyFilter(){Array.prototype.forEach.call(cal.querySelectorAll('[data-id]'),function(n){var e=byId(n.dataset.id);n.classList.toggle('dim',!visible(e));});}
+function applyFilter(){Array.prototype.forEach.call(cal.querySelectorAll('[data-id]'),function(n){var e=byId(n.dataset.id);n.classList.toggle('dim',!visible(e));});
+  /* hidden items must not leave empty headings/boxes behind */
+  Array.prototype.forEach.call(cal.querySelectorAll('.chips'),function(c){c.style.display=c.querySelector('.chip:not(.dim)')?'':'none';});
+  Array.prototype.forEach.call(cal.querySelectorAll('.list'),function(l){
+    var any=l.querySelector('.item:not(.dim)'),has=l.querySelector('.item'),m=l.querySelector('.nof');
+    if(has&&!any){if(!m){m=document.createElement('p');m.className='none nof';l.appendChild(m);}m.textContent=t().none;}else if(m){m.remove();}
+  });}
 $('prev').onclick=function(){show(cur-1);};
 $('next').onclick=function(){show(cur+1);};
 $('msel').onchange=function(){show(Math.floor(cur/12)*12+(+$('msel').value));};
