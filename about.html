@@ -128,6 +128,9 @@ h2{margin:0 0 4px;font-size:22px;font-weight:700;color:var(--primary);text-wrap:
 .ft-en{display:block;color:#fff;font-size:16px;margin-bottom:6px}
 .ft-dept{display:block;margin-bottom:6px}
 address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
+.ft-contact{margin:4px 0 6px;font-size:15px;line-height:1.75}
+.ft-row{display:flex;gap:8px;flex-wrap:wrap}
+.ft-row a,.ft-row .ft-val{color:#fff}
 .ft-mail{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
 .ft-mail a{color:#fff}
 .ft-mail button{font-family:var(--font);font-size:12px;padding:2px 10px;background:transparent;color:#fff;border:1px solid var(--ft-line);border-radius:6px;cursor:pointer}
@@ -158,7 +161,7 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
   .panel{padding:16px}
   .sp-list li{height:72px}
   .ft-main{flex-direction:column;text-align:center}
-  .ft-mail{justify-content:center}
+  .ft-mail,.ft-row{justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
@@ -314,6 +317,12 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
         <span class="ft-en">Thailand Aquatic Sports Association : TASA</span>
         <span class="ft-dept" id="ftdept"></span>
         <address id="ftaddr"></address>
+        <div class="ft-contact">
+          <div class="ft-row"><span class="ft-lbl" id="ftl-office"></span><a href="tel:+6621709468">(+66)2 170 9468</a></div>
+          <div class="ft-row"><span class="ft-lbl" id="ftl-hot"></span><a href="tel:+66930135268">(+66)93 013 5268</a></div>
+          <div class="ft-row"><span class="ft-lbl" id="ftl-web"></span><a href="https://thaiaquatics.or.th/" target="_blank" rel="noopener">thaiaquatics.or.th</a></div>
+          <div class="ft-row"><span class="ft-lbl" id="ftl-hours"></span><span class="ft-val" id="ftv-hours"></span></div>
+        </div>
         <div class="ft-mail"><span id="ftmaillbl"></span><a href="mailto:thaitaa@thaiaquatics.or.th">thaitaa@thaiaquatics.or.th</a><button type="button" id="ftcopy"></button></div>
       </div>
     </div>
@@ -608,7 +617,7 @@ th:{
   cta1:'ดูปฏิทินการแข่งขันนานาชาติ',cta2:'ส่งอีเมลถึงฝ่ายฯ',
   sph:'ผู้สนับสนุน',ftorg:'สำนักงานเลขาธิการ สมาคมกีฬาทางน้ำแห่งประเทศไทย',
   addr:'ชั้น 21 อาคารเฉลิมพระเกียรติ 7 รอบ พระชนมพรรษา<br>เลขที่ 286 การกีฬาแห่งประเทศไทย ถนนรามคำแหง<br>แขวงหัวหมาก เขตบางกะปิ กรุงเทพมหานคร 10240',
-  ftdept:'ข้อมูลเพื่อการประสานงาน ฝ่ายกิจการต่างประเทศ (Foreign Affairs Department)',ftmail:'อีเมล:',copy:'คัดลอก',copied:'คัดลอกแล้ว',logoalt:'โลโก้สมาคมกีฬาทางน้ำแห่งประเทศไทย'
+  ftdept:'ข้อมูลเพื่อการประสานงาน ฝ่ายกิจการต่างประเทศ (Foreign Affairs Department)',ftmail:'อีเมล:',ftoffice:'เบอร์สำนักงาน:',fthot:'สายด่วน (Hotline):',ftweb:'เว็บไซต์หลักของสมาคมฯ:',fthours:'เวลาปฏิบัติงาน:',fthoursv:'09.00 – 17.00 น. (GMT+7)',copy:'คัดลอก',copied:'คัดลอกแล้ว',logoalt:'โลโก้สมาคมกีฬาทางน้ำแห่งประเทศไทย'
 },
 en:{
   title:'About the Foreign Affairs Department',
@@ -630,7 +639,7 @@ en:{
   cta1:'View the international calendar',cta2:'Email the department',
   sph:'Sponsors',ftorg:'Secretariat, Thailand Aquatic Sports Association',
   addr:'Floor 21, 7th Cycle Birthday Anniversary Commemoration Building<br>286 Sports Authority of Thailand, Ramkhamhaeng Road<br>Hua Mak, Bang Kapi, Bangkok 10240',
-  ftdept:'Information for coordination, Foreign Affairs Department',ftmail:'Email:',copy:'Copy',copied:'Copied',logoalt:'Thailand Aquatic Sports Association logo'
+  ftdept:'Information for coordination, Foreign Affairs Department',ftmail:'Email:',ftoffice:'Office:',fthot:'Hotline:',ftweb:'Main website:',fthours:'Office hours:',fthoursv:'9:00 – 17:00 (GMT+7)',copy:'Copy',copied:'Copied',logoalt:'Thailand Aquatic Sports Association logo'
 }};
 function t(){return T[lang];}
 
@@ -687,7 +696,7 @@ function render(){
   $('h-src').textContent=x.hSrc;$('l-src').textContent=x.lSrc;
   $('srclist').innerHTML=x.src.map(function(s){return '<li>'+esc(s)+'</li>';}).join('');
   $('h-ct').textContent=x.hCt;$('l-ct').textContent=x.lCt;$('cta1').textContent=x.cta1;$('cta2').textContent=x.cta2;
-  $('ftorg').textContent=x.ftorg;$('ftaddr').innerHTML=x.addr;$('ftdept').textContent=x.ftdept;$('ftmaillbl').textContent=x.ftmail;$('ftcopy').textContent=x.copy;
+  $('ftorg').textContent=x.ftorg;$('ftaddr').innerHTML=x.addr;$('ftdept').textContent=x.ftdept;$('ftmaillbl').textContent=x.ftmail;$('ftcopy').textContent=x.copy;$('ftl-office').textContent=x.ftoffice;$('ftl-hot').textContent=x.fthot;$('ftl-web').textContent=x.ftweb;$('ftl-hours').textContent=x.fthours;$('ftv-hours').textContent=x.fthoursv;
 }
 document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('.lb');if(b){lang=b.dataset.l;try{localStorage.setItem('tasa-lang',lang);}catch(e){}render();}});
 $('ftcopy').addEventListener('click',function(){var x=t(),m='thaitaa@thaiaquatics.or.th';
