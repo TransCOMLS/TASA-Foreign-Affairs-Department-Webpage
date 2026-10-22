@@ -160,6 +160,45 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
+
+/* org chart */
+.org-root{display:flex;justify-content:center}
+.org-node{display:inline-flex;align-items:center;gap:12px;background:var(--hd-a);color:#fff;border-radius:999px;padding:8px 22px 8px 8px;box-shadow:0 4px 14px rgba(15,35,60,.18)}
+.org-node .ic{flex:none;width:44px;height:44px;border-radius:50%;background:#1aa7e0;display:grid;place-items:center;color:#fff}
+.org-node b{display:block;font-size:17px;line-height:1.3}
+.org-node span{display:block;font-size:13px;color:var(--hd-sub)}
+.org-stem{width:2px;height:22px;background:var(--line);margin:0 auto}
+.org-depts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.org-depts li{position:relative;padding-top:22px}
+.org-depts li::before{content:"";position:absolute;top:0;left:50%;width:2px;height:22px;background:var(--line)}
+.org-depts li::after{content:"";position:absolute;top:0;left:-6px;right:-6px;height:2px;background:var(--line)}
+.org-depts li:first-child::after{left:50%}
+.org-depts li:last-child::after{right:50%}
+.dept-btn{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-family:var(--font);color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 10px 12px;cursor:pointer;position:relative}
+.dept-btn:hover{border-color:var(--accent);background:var(--soft)}
+.dept-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);box-shadow:0 0 0 3px rgba(43,108,176,.18)}
+.dept-btn .ic{width:44px;height:44px;border-radius:50%;background:#1aa7e0;color:#fff;display:grid;place-items:center}
+.dept-btn b{font-size:15px;line-height:1.35}
+.dept-btn small{color:var(--muted);font-size:12.5px}
+.dept-btn .mine{position:absolute;top:-11px;right:10px;background:var(--primary);color:var(--card);font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 10px}
+.org-panel{margin-top:16px;background:var(--card);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:12px;padding:16px 20px}
+.org-panel h3{margin:0 0 2px;font-size:18px;color:var(--primary)}
+.org-panel .lead{margin:0 0 10px}
+.pos{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.pos li{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.pos li:first-child{border-top:0}
+.pos .dot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.pos .nm{min-width:0;flex:1}
+.pos .nm small{display:block;color:var(--muted);font-size:13px}
+.pos .qty{flex:none;font-size:12px;font-weight:700;background:var(--soft);color:var(--primary);border-radius:999px;padding:1px 10px}
+.org-note{margin:10px 0 0;font-size:13px;color:var(--muted)}
+@media (max-width:900px){
+  .org-depts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .org-depts li{padding-top:0}
+  .org-depts li::before,.org-depts li::after{display:none}
+}
+@media (max-width:480px){.org-depts{grid-template-columns:1fr}.org-node b{font-size:15px}}
+
 /* about page */
 .pagehead{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px}
 .pagehead .eyebrow{color:var(--accent)}
@@ -213,6 +252,15 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
       <h2 id="h-role"></h2>
       <p class="lead" id="l-role"></p>
       <div class="cols" id="roles"></div>
+    </section>
+
+    <section aria-labelledby="h-org">
+      <h2 id="h-org"></h2>
+      <p class="lead" id="l-org"></p>
+      <div class="org-root"><div class="org-node"><span class="ic" id="orgic"></span><div><b id="orgrootT"></b><span id="orgrootS"></span></div></div></div>
+      <div class="org-stem" id="orgstem"></div>
+      <ul class="org-depts" id="orgdepts"></ul>
+      <div class="org-panel" id="orgpanel" aria-live="polite"></div>
     </section>
 
     <section aria-labelledby="h-sp">
@@ -280,6 +328,11 @@ th:{
   eyebrow:'Foreign Affairs Department',
   h1:'เกี่ยวกับฝ่ายกิจการต่างประเทศ',
   intro:'ฝ่ายกิจการต่างประเทศ สมาคมกีฬาทางน้ำแห่งประเทศไทย ทำหน้าที่ประสานงานด้านกีฬาทางน้ำกับต่างประเทศ รวบรวมและเผยแพร่ข้อมูลการแข่งขันนานาชาติเพื่อประโยชน์ต่อสมาคมสมาชิก นักกีฬา และเจ้าหน้าที่',
+  org:{h:'โครงสร้างสำนักงานเลขาธิการ',l:'เลือกฝ่ายเพื่อดูตำแหน่งงานในฝ่าย',rootT:'สำนักงานเลขาธิการ (สลธ.)',rootS:'ลธ.ส.ว.ท. เป็นหัวหน้า',mine:'ฝ่ายของเรา',cnt:function(n){return n+' ตำแหน่ง';},posh:'ตำแหน่งในฝ่าย',note:'แสดงตำแหน่งตามโครงสร้างสำนักงานเลขาธิการ',
+    d:[{n:'ฝ่ายธุรการ',a:'ฝธก.',p:[['หัวหน้าฝ่ายธุรการ'],['เจ้าหน้าที่ธุรการ',3],['พลขับรถ'],['เจ้าหน้าที่ประสานงาน']]},
+       {n:'ฝ่ายกิจการต่างประเทศ',a:'ฝตท.',me:1,p:[['หัวหน้าฝ่ายต่างประเทศ'],['เจ้าหน้าที่ต่างประเทศ']]},
+       {n:'ฝ่ายการเงิน',a:'ฝกง.',p:[['หัวหน้าฝ่ายการเงิน'],['เจ้าหน้าที่การเงิน']]},
+       {n:'ธุรการประจำคณะกรรมการบริหาร',a:'',p:[['ประจำสำนักงาน']]}]},
   hRole:'บทบาทหน้าที่',lRole:'งานหลักของฝ่ายฯ ด้านความสัมพันธ์และข้อมูลระหว่างประเทศ',
   roles:[['ประสานงานกับสหพันธ์','ติดต่อ World Aquatics และสหพันธ์กีฬาทางน้ำระดับทวีป ในนามของสมาคมฯ'],['รวบรวมกำหนดการแข่งขัน','ติดตามปฏิทินและรายการแข่งขันนานาชาติทั้ง 6 ชนิดกีฬา ตั้งแต่ระดับโลกจนถึงรายการที่สหพันธ์สมาชิกจัด'],['เผยแพร่ข้อมูล','แจ้งรายละเอียดรายการแข่งขัน สถานที่ และข้อมูลติดต่อผู้จัด ผ่านปฏิทินการแข่งขันนานาชาติ'],['สนับสนุนการเข้าร่วม','ให้ข้อมูลประกอบการพิจารณาส่งนักกีฬาและเจ้าหน้าที่เข้าร่วมรายการต่างประเทศ']],
   hSp:'ชนิดกีฬาที่ติดตาม',lSp:'ครอบคลุม 6 ชนิดกีฬา ตามประเภทการแข่งขันของ World Aquatics',
@@ -301,6 +354,11 @@ en:{
   eyebrow:'Foreign Affairs Department',
   h1:'About the Foreign Affairs Department',
   intro:'The Foreign Affairs Department of the Thailand Aquatic Sports Association coordinates international aquatic sports matters, and compiles and shares information on international competitions for member associations, athletes and officials.',
+  org:{h:'Secretariat structure',l:'Select a department to see its positions',rootT:'Secretariat Office (สลธ.)',rootS:'Headed by ลธ.ส.ว.ท.',mine:'Our department',cnt:function(n){return n+(n===1?' position':' positions');},posh:'Positions',note:'Positions shown follow the Secretariat structure.',
+    d:[{n:'Administration Department',a:'ฝธก.',p:[['Head of Administration'],['Administrative Officer',3],['Driver'],['Coordination Officer']]},
+       {n:'Foreign Affairs Department',a:'ฝตท.',me:1,p:[['Head of Foreign Affairs'],['Foreign Affairs Officer']]},
+       {n:'Finance Department',a:'ฝกง.',p:[['Head of Finance'],['Finance Officer']]},
+       {n:'Executive Committee Secretariat',a:'',p:[['Office-based staff']]}]},
   hRole:'Roles and responsibilities',lRole:'The department’s main work in international relations and information',
   roles:[['Federation liaison','Communicates with World Aquatics and the continental aquatics federations on behalf of the association'],['Schedule tracking','Follows the calendar and international competitions across all 6 disciplines, from world level to events hosted by member federations'],['Information sharing','Provides event details, venues and organiser contacts through the International Competition Calendar'],['Participation support','Supplies information to help decide on sending athletes and officials to international events']],
   hSp:'Disciplines we follow',lSp:'Six disciplines, following the World Aquatics competition categories',
@@ -316,6 +374,29 @@ en:{
   ftdept:'Information for coordination, Foreign Affairs Department',ftmail:'Email:',copy:'Copy',copied:'Copied',logoalt:'Thailand Aquatic Sports Association logo'
 }};
 function t(){return T[lang];}
+
+
+var ICON='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><circle cx="12" cy="8" r="3.2" fill="currentColor"/><path d="M5.5 19c0-3.6 2.9-5.8 6.5-5.8s6.5 2.2 6.5 5.8z" fill="currentColor"/><circle cx="5.2" cy="9.6" r="2.2" fill="currentColor" opacity=".75"/><circle cx="18.8" cy="9.6" r="2.2" fill="currentColor" opacity=".75"/></svg>';
+var selDept=1;
+function renderOrg(){
+  var o=t().org;
+  $('h-org').textContent=o.h;$('l-org').textContent=o.l;$('orgrootT').textContent=o.rootT;$('orgrootS').textContent=o.rootS;$('orgic').innerHTML=ICON;
+  $('orgdepts').innerHTML=o.d.map(function(d,i){
+    return '<li><button type="button" class="dept-btn" data-i="'+i+'" aria-pressed="'+(i===selDept)+'" aria-controls="orgpanel">'+(d.me?'<span class="mine">'+esc(o.mine)+'</span>':'')+
+      '<span class="ic">'+ICON+'</span><b>'+esc(d.n)+(d.a?' ('+esc(d.a)+')':'')+'</b><small>'+esc(o.cnt(d.p.length))+'</small></button></li>';}).join('');
+  showDept();
+}
+function showDept(){
+  var o=t().org,d=o.d[selDept];
+  $('orgpanel').innerHTML='<h3>'+esc(d.n)+(d.a?' ('+esc(d.a)+')':'')+'</h3><p class="lead">'+esc(o.posh)+' · '+esc(o.cnt(d.p.length))+'</p><ul class="pos">'+
+    d.p.map(function(q){return '<li><span class="dot"></span><span class="nm">'+esc(q[0])+(q[2]?'<small>'+esc(q[2])+'</small>':'')+'</span>'+(q[1]>1?'<span class="qty">× '+q[1]+'</span>':'')+'</li>';}).join('')+'</ul><p class="org-note">'+esc(o.note)+'</p>';
+}
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest&&ev.target.closest('.dept-btn');if(!b)return;
+  selDept=+b.dataset.i;
+  Array.prototype.forEach.call(document.querySelectorAll('.dept-btn'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+  showDept();
+});
 function render(){
   var x=t();document.documentElement.lang=lang;document.title=x.title;
   $('orgname').textContent=x.orgname;$('orgsub').textContent=x.orgsub;$('orgdept').textContent=x.orgdept;
@@ -323,6 +404,7 @@ function render(){
   $('nav').innerHTML=x.nav.map(function(n){return '<a href="'+n[0]+'"'+(n[2]?' aria-current="page"':'')+'>'+esc(n[1])+'</a>';}).join('');
   Array.prototype.forEach.call(document.querySelectorAll('.lb'),function(b){b.setAttribute('aria-pressed',b.dataset.l===lang?'true':'false');});
   $('eyebrow').textContent=x.eyebrow;$('h1').textContent=x.h1;$('intro').textContent=x.intro;
+  renderOrg();
   $('h-role').textContent=x.hRole;$('l-role').textContent=x.lRole;
   $('roles').innerHTML=x.roles.map(function(a,i){return '<div class="ab"><span class="no">'+(i+1)+'</span><h3>'+esc(a[0])+'</h3><p>'+esc(a[1])+'</p></div>';}).join('');
   $('h-sp').textContent=x.hSp;$('l-sp').textContent=x.lSp;
