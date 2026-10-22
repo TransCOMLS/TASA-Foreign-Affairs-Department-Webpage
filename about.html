@@ -167,6 +167,8 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
 .org-node .ic{flex:none;width:44px;height:44px;border-radius:50%;background:#1aa7e0;display:grid;place-items:center;color:#fff}
 .org-node b{display:block;font-size:17px;line-height:1.3}
 .org-node span.s{display:block;font-size:13px;color:var(--hd-sub)}
+.org-node #orgrootN{color:#fff;font-weight:600}
+.org-node #orgrootN:empty{display:none}
 .org-root{display:flex;justify-content:center}
 .org-stem{width:2px;height:18px;background:var(--line);margin:0 auto}
 .chain{display:flex;flex-direction:column;align-items:center}
@@ -260,7 +262,7 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
     <section aria-labelledby="h-org">
       <h2 id="h-org"></h2>
       <p class="lead" id="l-org"></p>
-      <div class="org-root"><button type="button" class="org-node" id="orgroot" aria-pressed="false" aria-controls="orgpanel"><span class="ic" id="orgic"></span><span><b id="orgrootT"></b><span class="s" id="orgrootS"></span></span></button></div>
+      <div class="org-root"><button type="button" class="org-node" id="orgroot" aria-pressed="false" aria-controls="orgpanel"><span class="ic" id="orgic"></span><span><b id="orgrootT"></b><span class="s" id="orgrootS"></span><span class="s" id="orgrootN"></span></span></button></div>
       <div class="org-stem"></div>
       <div class="chain" id="orgchain"></div>
       <div class="org-stem"></div>
@@ -326,27 +328,47 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
    {
     "th": "เลขาธิการสมาคมฯ",
     "en": "Secretary-General",
-    "names": []
+    "names": [
+     {
+      "th": "นายธนาวิชญ์ โถสกุล"
+     }
+    ]
    },
    {
     "th": "ผู้อำนวยการสำนักงาน",
     "en": "Office Director",
-    "names": []
+    "names": [
+     {
+      "th": "ผศ.มานะ ภู่หลำ"
+     }
+    ]
    },
    {
     "th": "รองผู้อำนวยการสำนักงาน",
     "en": "Deputy Office Director",
-    "names": []
+    "names": [
+     {
+      "th": "นายวินัย สินปัญญาสิริ"
+     }
+    ]
    },
    {
     "th": "ผู้ช่วยผู้อำนวยการสำนักงาน",
     "en": "Assistant Office Director",
-    "names": []
+    "names": [
+     {
+      "th": "นายวิโรจน์ โล่ห์ทอง"
+     }
+    ]
    },
    {
     "th": "หัวหน้าสำนักงานฯ",
     "en": "Head of Office",
-    "names": []
+    "names": [
+     {
+      "th": "นางสาวชาลินี ยึดเขียว"
+     }
+    ]
    }
   ]
  },
@@ -365,7 +387,11 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
     {
      "th": "หัวหน้าฝ่ายธุรการ",
      "en": "Head of Administration",
-     "names": []
+     "names": [
+      {
+       "th": "นางสาวชาลินี ยึดเขียว"
+      }
+     ]
     },
     {
      "th": "เจ้าหน้าที่ธุรการ",
@@ -384,29 +410,94 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
      "names": []
     },
     {
-     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬา",
-     "en": "Sports Coordination Officer",
-     "names": []
+     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬากระโดดน้ำ",
+     "en": "Diving Coordination Officer",
+     "names": [
+      {
+       "th": "นางสาวศิริรัตน์ คำมา"
+      }
+     ]
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬาว่ายน้ำลีลา",
+     "en": "Artistic Swimming Coordination Officer",
+     "names": [
+      {
+       "th": "นางสาวธัญญ์รภัส พัชรเมธินภัสร์"
+      }
+     ]
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬาโปโลน้ำ",
+     "en": "Water Polo Coordination Officer",
+     "names": [
+      {
+       "th": "นางสาวศิริลักษณ์ พงษ์คละ"
+      }
+     ]
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬาว่ายน้ำ",
+     "en": "Swimming Coordination Officer",
+     "names": [
+      {
+       "th": "นางสาวกษมา แป้นคง"
+      }
+     ]
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬาว่ายน้ำโอเพ่นวอเตอร์",
+     "en": "Open Water Swimming Coordination Officer",
+     "names": [
+      {
+       "th": "นายกิตติพิชญ์ คำตรง"
+      }
+     ]
+    },
+    {
+     "th": "เจ้าหน้าที่ฝ่ายประสานงานกีฬาทางน้ำมาสเตอร์",
+     "en": "Masters Aquatics Coordination Officer",
+     "names": [
+      {
+       "th": "นายสุทธิพงศ์ จานทอง"
+      }
+     ]
     },
     {
      "th": "เจ้าหน้าที่ฝ่ายเทคนิคกีฬา",
      "en": "Sports Technical Officer",
-     "names": []
+     "names": [
+      {
+       "th": "นางสาวศิริรัตน์ คำมา"
+      }
+     ]
     },
     {
-     "th": "เจ้าหน้าที่ฝ่ายสารบรรณ",
-     "en": "Correspondence Officer",
-     "names": []
+     "th": "เจ้าหน้าที่ฝ่ายสารบรรณและประชาสัมพันธ์",
+     "en": "Correspondence and Public Relations Officer",
+     "names": [
+      {
+       "th": "นางสาวศศินากร ทรงสิทธิวัฒน์"
+      }
+     ]
     },
     {
-     "th": "เจ้าหน้าที่ฝ่ายประชาสัมพันธ์และกิจการสโมสร",
-     "en": "Public Relations and Club Affairs Officer",
-     "names": []
+     "th": "เจ้าหน้าที่ฝ่ายกิจการสโมสร",
+     "en": "Club Affairs Officer",
+     "names": [
+      {
+       "th": "นายสุทธิพงศ์ จานทอง"
+      }
+     ]
     },
     {
      "th": "เจ้าหน้าที่ฝ่ายพัฒนาผู้ฝึกสอน",
      "en": "Coach Development Officer",
-     "names": []
+     "names": [
+      {
+       "th": "นางสาวกษมา แป้นคง"
+      }
+     ]
     }
    ]
   },
@@ -420,12 +511,21 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
     {
      "th": "หัวหน้าฝ่ายกิจการต่างประเทศ",
      "en": "Head of International Relations",
-     "names": []
+     "names": [
+      {
+       "th": "นางสาวชาลินี ยึดเขียว"
+      }
+     ]
     },
     {
      "th": "เจ้าหน้าที่ฝ่ายกิจการต่างประเทศ",
      "en": "International Relations Officer",
-     "names": []
+     "names": [
+      {
+       "th": "นายชุษณะ รุ่งเป้า",
+       "en": "Mr. Chusana Rungpao"
+      }
+     ]
     }
    ]
   },
@@ -438,12 +538,20 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
     {
      "th": "หัวหน้าฝ่ายการเงิน",
      "en": "Head of Finance",
-     "names": []
+     "names": [
+      {
+       "th": "นางสาวรพีพร มุขโต"
+      }
+     ]
     },
     {
-     "th": "เจ้าหน้าที่การเงิน",
+     "th": "เจ้าหน้าที่ฝ่ายการเงิน",
      "en": "Finance Officer",
-     "names": []
+     "names": [
+      {
+       "th": "นางสาวอุษา สำเนียงล้ำ"
+      }
+     ]
     }
    ]
   },
@@ -528,7 +636,7 @@ function pnames(q){return (q.names||[]).map(function(n){return lang==='en'?(n.en
 function dname(d){return pt(d,'n')+(d.a&&lang==='th'?' ('+d.a+')':'');}
 function renderOrg(){
   var o=t().org;
-  $('h-org').textContent=o.h;$('l-org').textContent=o.l;$('orgrootT').textContent=o.rootT;$('orgrootS').textContent=o.rootS;$('orgic').innerHTML=ICON;
+  $('h-org').textContent=o.h;$('l-org').textContent=o.l;$('orgrootT').textContent=o.rootT;$('orgrootS').textContent=o.rootS;var sg=ORG.office.positions[0],sgn=pnames(sg);$('orgrootN').textContent=sgn.length?ptitle(sg)+': '+sgn.join(', '):'';$('orgic').innerHTML=ICON;
   $('orgchain').innerHTML=ORG.chain.map(function(i,k){var q=ORG.office.positions[i],nm=pnames(q);
     return (k?'<div class="org-stem" style="height:10px"></div>':'')+'<div class="cn"><b>'+esc(ptitle(q))+'</b>'+(nm.length?'<span class="who">'+esc(nm.join(', '))+'</span>':'')+(lang==='th'&&q.en?'<span class="en">'+esc(q.en)+'</span>':'')+'</div>';}).join('');
   $('orgdepts').innerHTML=ORG.depts.map(function(d){
