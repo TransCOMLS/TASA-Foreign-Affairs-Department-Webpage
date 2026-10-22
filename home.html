@@ -213,6 +213,7 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
       <h2 id="h-ab"></h2>
       <p class="lead" id="l-ab"></p>
       <div class="about" id="aboutgrid"></div>
+      <div class="more"><a href="./about.html" id="aboutMore"></a></div>
     </section>
 
     <section id="links" aria-labelledby="h-lk">
@@ -270,7 +271,7 @@ var T={
 th:{
   title:'ฝ่ายกิจการต่างประเทศ สมาคมกีฬาทางน้ำแห่งประเทศไทย',
   orgname:'สมาคมกีฬาทางน้ำแห่งประเทศไทย',orgsub:'Thailand Aquatic Sports Association : TASA',orgdept:'ฝ่ายกิจการต่างประเทศ',
-  nav:[['./home.html','หน้าแรก',1],['./','ปฏิทินการแข่งขัน'],['#about','เกี่ยวกับฝ่ายฯ'],['#contact','ติดต่อ']],
+  nav:[['./home.html','หน้าแรก',1],['./','ปฏิทินการแข่งขัน'],['./about.html','เกี่ยวกับฝ่ายฯ'],['#contact','ติดต่อ']],
   eyebrow:'Foreign Affairs Department',
   h1:'ศูนย์รวมข้อมูลกีฬาทางน้ำระดับนานาชาติ',
   intro:'ฝ่ายกิจการต่างประเทศ สมาคมกีฬาทางน้ำแห่งประเทศไทย ติดตามและรวบรวมกำหนดการแข่งขันกีฬาทางน้ำรายการนานาชาติ เพื่อประสานงานกับสหพันธ์ระดับโลกและระดับทวีป',
@@ -281,7 +282,7 @@ th:{
   sport:{swim:'ว่ายน้ำ',polo:'โปโลน้ำ',dive:'กระโดดน้ำ',art:'ว่ายน้ำลีลา',open:'ว่ายน้ำโอเพ่นวอเตอร์',mas:'กีฬาทางน้ำมาสเตอร์'},
   cnt:function(n){return n+' รายการ';},next:'รายการถัดไป',none:'ยังไม่มีรายการ',
   hUp:'รายการแข่งขันที่ใกล้ถึง',lUp:'6 รายการถัดไปในปฏิทิน (ข้อมูลอัปเดตทุก 3 วัน)',
-  more:'ดูปฏิทินทั้งหมด »',noData:'ไม่สามารถโหลดรายการล่าสุดได้ในขณะนี้ กรุณาดูที่หน้าปฏิทินการแข่งขัน',
+  aboutMore:'ดูข้อมูลฝ่ายกิจการต่างประเทศเพิ่มเติม »',more:'ดูปฏิทินทั้งหมด »',noData:'ไม่สามารถโหลดรายการล่าสุดได้ในขณะนี้ กรุณาดูที่หน้าปฏิทินการแข่งขัน',
   tbcDate:function(m,y){return 'ช่วงเดือน'+m+' '+y;},lastChange:'อัปเดตล่าสุด',
   hAb:'เกี่ยวกับฝ่ายกิจการต่างประเทศ',lAb:'บทบาทหลักของฝ่ายฯ ในการประสานงานด้านกีฬาทางน้ำกับต่างประเทศ',
   about:[['ประสานงานกับสหพันธ์','ติดต่อ World Aquatics และสหพันธ์ระดับทวีป ในนามของสมาคมฯ'],['รวบรวมกำหนดการ','ติดตามปฏิทินและรายการแข่งขันนานาชาติ ทั้ง 6 ชนิดกีฬา'],['เผยแพร่ข้อมูล','แจ้งรายละเอียดรายการแข่งขัน สถานที่ และข้อมูลติดต่อผู้จัด'],['สนับสนุนการเข้าร่วม','ให้ข้อมูลประกอบการพิจารณาส่งนักกีฬาและเจ้าหน้าที่เข้าร่วมรายการ']],
@@ -295,7 +296,7 @@ th:{
 en:{
   title:'Foreign Affairs Department · TASA',
   orgname:'Thailand Aquatic Sports Association : TASA',orgsub:'',orgdept:'Foreign Affairs Department',
-  nav:[['./home.html','Home',1],['./','Competition Calendar'],['#about','About'],['#contact','Contact']],
+  nav:[['./home.html','Home',1],['./','Competition Calendar'],['./about.html','About'],['#contact','Contact']],
   eyebrow:'Foreign Affairs Department',
   h1:'Your hub for international aquatic sports',
   intro:'The Foreign Affairs Department of the Thailand Aquatic Sports Association follows and compiles international aquatic competitions, and coordinates with World Aquatics and the continental federations.',
@@ -306,7 +307,7 @@ en:{
   sport:{swim:'Swimming',polo:'Water Polo',dive:'Diving',art:'Artistic Swimming',open:'Open Water Swimming',mas:'Masters Aquatics'},
   cnt:function(n){return n+(n===1?' event':' events');},next:'Next',none:'No events yet',
   hUp:'Upcoming competitions',lUp:'The next 6 events in the calendar (data refreshed every 3 days)',
-  more:'See the full calendar »',noData:'The latest events could not be loaded right now. Please see the competition calendar.',
+  aboutMore:'More about the department »',more:'See the full calendar »',noData:'The latest events could not be loaded right now. Please see the competition calendar.',
   tbcDate:function(m,y){return 'During '+m+' '+y;},lastChange:'Latest update',
   hAb:'About the Foreign Affairs Department',lAb:'The department’s main role in international aquatic sports coordination',
   about:[['Federation liaison','Communicates with World Aquatics and the continental federations on behalf of the association'],['Schedule tracking','Follows the calendar and international events across all 6 disciplines'],['Information sharing','Provides event details, venues and organiser contacts'],['Participation support','Supplies information to help decide on sending athletes and officials']],
@@ -386,7 +387,7 @@ function render(){
   var cl=DATA&&DATA.changelog&&DATA.changelog[0];
   if(cl){$('upd').hidden=false;$('upd').innerHTML='<b>'+esc(x.lastChange)+' ('+esc(fmtIso(cl.date))+'):</b> '+esc(lang==='en'?(cl.text_en||cl.text):cl.text);}else{$('upd').hidden=true;}
 
-  $('h-ab').textContent=x.hAb;$('l-ab').textContent=x.lAb;
+  $('aboutMore').textContent=x.aboutMore;$('h-ab').textContent=x.hAb;$('l-ab').textContent=x.lAb;
   $('aboutgrid').innerHTML=x.about.map(function(a,i){return '<div class="ab"><span class="no">'+(i+1)+'</span><h3>'+esc(a[0])+'</h3><p>'+esc(a[1])+'</p></div>';}).join('');
   $('h-lk').textContent=x.hLk;$('l-lk').textContent=x.lLk;
   $('linkgrid').innerHTML=x.links.map(function(a){var ext=/^https?:/.test(a[0]);return '<a class="lk" href="'+esc(a[0])+'"'+(ext?' target="_blank" rel="noopener"':'')+'><b>'+esc(a[1])+'</b><span>'+esc(a[2])+'</span></a>';}).join('');

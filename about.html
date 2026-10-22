@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>เกี่ยวกับฝ่ายกิจการต่างประเทศ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Homepage of the TASA Foreign Affairs Department. Same design tokens as the calendar page (index.html).
+   Upcoming events are read from the #events-data JSON inside index.html, so the scheduled calendar update refreshes this page too. */
+:root{
+  --bg:#f3f6fa; --card:#ffffff; --ink:#1f2d3d; --muted:#64748b; --line:#e2e8f0; --primary:#17406b; --accent:#2b6cb0; --soft:#eaf3fb;
+  --swim:#1d4ed8; --polo:#15803d; --dive:#c2410c; --art:#9333ea; --open:#0e7490; --mas:#be185d;
+  --font:'Noto Sans Thai','TH Sarabun New',Tahoma,sans-serif;
+  --hd-a:#1a365d; --hd-b:#2a4365; --hd-sub:#90cdf4; --ft-bg:#1a202c; --ft-ink:#a0aec0; --ft-line:#2d3748; --ft-top:#3182ce;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1621; --card:#152233; --ink:#e6edf5; --muted:#93a3b8; --line:#26364a; --primary:#9cc4ee; --accent:#6aa9e6; --soft:#16293f;
+  --swim:#3b6ff0; --polo:#1f9d55; --dive:#e0622a; --art:#a855f7; --open:#1798b8; --mas:#db2777;
+  --hd-a:#0f2a47; --hd-b:#17406b; --hd-sub:#9cc4ee; --ft-bg:#0a1019; --ft-ink:#93a3b8; --ft-line:#1f2d40; --ft-top:#2b6cb0;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.6;display:flex;flex-direction:column;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:101;background:var(--hd-a)}
+a{color:var(--accent)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.in{max-width:1180px;margin:0 auto}
+
+/* header */
+.app-header{background:linear-gradient(135deg,var(--hd-a) 0%,var(--hd-b) 100%);color:#fff;padding-block:18px;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.hd-in{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px 20px}
+.logo-area{display:flex;align-items:center;gap:14px;min-width:0}
+.logo-img{flex:none;height:96px;width:auto;display:block}
+.hd-text{display:flex;flex-direction:column;min-width:0}
+.org-name{font-size:24px;font-weight:700;letter-spacing:.3px;line-height:1.3}
+.org-sub{font-size:14px;font-weight:500;color:var(--hd-sub);text-transform:uppercase;letter-spacing:1px}
+.org-dept{margin-top:4px;font-size:16px;font-weight:600;line-height:1.3}
+.hd-right{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:flex-end}
+nav.top{display:flex;flex-wrap:wrap;gap:4px 6px}
+nav.top a{color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:6px 12px;border-radius:999px}
+nav.top a:hover,nav.top a[aria-current="page"]{background:rgba(255,255,255,.18)}
+.lang{display:inline-flex;border:1px solid rgba(255,255,255,.4);border-radius:999px;overflow:hidden}
+.lang button{font-family:var(--font);font-weight:600;border:0;background:transparent;color:#fff;padding:5px 12px;font-size:13px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:#fff;color:var(--hd-a)}
+.lang button:hover:not([aria-pressed="true"]){background:rgba(255,255,255,.25)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app-header a:focus-visible,.app-header button:focus-visible,.hero a:focus-visible{outline-color:#fff}
+
+/* layout */
+main{flex:1;padding-block:24px 36px}
+section{margin-top:28px}
+h2{margin:0 0 4px;font-size:22px;font-weight:700;color:var(--primary);text-wrap:balance}
+.lead{margin:0 0 16px;color:var(--muted);font-size:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:44px 40px 70px;
+  background:linear-gradient(135deg,#17406b 0%,#2b6cb0 100%);box-shadow:0 8px 24px rgba(23,64,107,.2)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;opacity:.5;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 64' preserveAspectRatio='none'%3E%3Cpath d='M0 36 Q75 8 150 36 T300 36 T450 36 T600 36 V64 H0Z' fill='%23ffffff' fill-opacity='.14'/%3E%3Cpath d='M0 46 Q75 20 150 46 T300 46 T450 46 T600 46 V64 H0Z' fill='%23ffffff' fill-opacity='.14'/%3E%3C/svg%3E") bottom/600px 64px repeat-x}
+.hero>*{position:relative;z-index:1}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#bee3f8;margin-bottom:8px}
+.hero h1{margin:0 0 10px;font-size:36px;line-height:1.25;font-weight:700;text-wrap:balance;max-width:20ch}
+.hero p{margin:0;max-width:60ch;font-size:16px;color:#e6f0fa}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font);font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;padding:11px 20px;border:1px solid transparent}
+.btn.pri{background:#fff;color:#17406b}
+.btn.pri:hover{background:#e6f0fa}
+.btn.sec{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+.btn.sec:hover{background:rgba(255,255,255,.16)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:-40px;position:relative;z-index:2;padding-inline:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 4px 14px rgba(15,35,60,.08)}
+.stat b{display:block;font-size:26px;line-height:1.2;color:var(--primary);font-weight:700}
+.stat span{font-size:13px;color:var(--muted)}
+
+/* sports */
+.sports{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sp{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:14px 16px;min-width:0}
+.sp h3{margin:0;font-size:16px;font-weight:600;color:var(--ink)}
+.sp .n{font-size:13px;color:var(--muted)}
+.sp .nx{margin-top:8px;font-size:13px;line-height:1.5;color:var(--ink);overflow-wrap:anywhere}
+.sp .nx i{font-style:normal;color:var(--muted)}
+
+/* upcoming */
+.up{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.up li{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:6px 16px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.up li:first-child{border-top:0;padding-top:2px}
+.up .dt{font-weight:600;color:var(--primary);font-size:14px}
+.up .nm{min-width:0;font-weight:500}
+.up .nm small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#fff;background:var(--c);border-radius:999px;padding:2px 10px;white-space:nowrap}
+.tag b{background:rgba(255,255,255,.25);border-radius:4px;padding:0 5px}
+.more{margin-top:14px}
+.more a{font-weight:600}
+.empty{color:var(--muted);margin:0}
+.upd{margin-top:14px;background:var(--soft);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--ink)}
+.upd b{color:var(--primary)}
+
+/* about */
+.about{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.ab{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.ab .no{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--primary);color:var(--card);font-weight:700;font-size:14px;margin-bottom:8px}
+.ab h3{margin:0 0 4px;font-size:15px;font-weight:600}
+.ab p{margin:0;color:var(--muted);font-size:13.5px}
+
+/* links */
+.links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.lk{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.lk:hover{border-color:var(--accent);background:var(--soft)}
+.lk b{display:block;color:var(--primary)}
+.lk span{font-size:13px;color:var(--muted)}
+
+/* sponsors + footer */
+.sponsors h3{margin:0 0 14px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}
+.sp-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.sp-list li{display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:12px;height:84px;padding:10px 14px}
+.sp-list img{display:block;max-height:100%;max-width:100%;width:auto;height:auto;object-fit:contain}
+.app-footer{background:var(--ft-bg);color:var(--ft-ink);border-top:4px solid var(--ft-top);padding-block:28px}
+.ft-in{display:flex;flex-direction:column;align-items:center;gap:14px}
+.ft-main{display:flex;align-items:center;gap:24px;width:100%;max-width:900px}
+.ft-logo{flex:none;height:110px;width:auto;display:block}
+.ft-info{min-width:0}
+.ft-info strong{display:block;color:#fff;font-size:18px;line-height:1.4}
+.ft-en{display:block;color:#fff;font-size:16px;margin-bottom:6px}
+.ft-dept{display:block;margin-bottom:6px}
+address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
+.ft-mail{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ft-mail a{color:#fff}
+.ft-mail button{font-family:var(--font);font-size:12px;padding:2px 10px;background:transparent;color:#fff;border:1px solid var(--ft-line);border-radius:6px;cursor:pointer}
+.ft-mail button:hover{background:var(--accent)}
+.ft-copy{width:100%;max-width:600px;border-top:1px solid var(--ft-line);padding-top:14px;font-size:13px;text-align:center}
+
+@media (max-width:900px){
+  .sports,.links{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .about{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sp-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .hd-in{flex-direction:column;text-align:center}
+  .logo-area{flex-direction:column;gap:8px}
+  .hd-right{justify-content:center}
+  .org-name{font-size:19px}
+  .logo-img{height:84px}
+  nav.top{justify-content:center}
+  .hero{padding:28px 20px 60px;border-radius:16px}
+  .hero h1{font-size:27px}
+  .stats{padding-inline:8px;margin-top:-34px}
+  .stat b{font-size:22px}
+  .sports,.links,.about{grid-template-columns:1fr}
+  .up li{grid-template-columns:minmax(0,1fr);gap:2px}
+  .up li .tag{justify-self:start;margin-top:4px}
+  .panel{padding:16px}
+  .sp-list li{height:72px}
+  .ft-main{flex-direction:column;text-align:center}
+  .ft-mail{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* about page */
+.pagehead{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px}
+.pagehead .eyebrow{color:var(--accent)}
+.pagehead h1{margin:0 0 8px;font-size:30px;line-height:1.25;color:var(--primary);text-wrap:balance}
+.pagehead p{margin:0;max-width:70ch;color:var(--ink)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ab h3{font-size:16px}
+.ab p{font-size:14px}
+.tl{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.tl li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start}
+.tl .tg{font-weight:700;font-size:13px;background:var(--primary);color:var(--card);border-radius:6px;padding:1px 10px;white-space:nowrap}
+.sp2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sp2 .sp p{margin:6px 0 0;font-size:13px;color:var(--muted)}
+.src{margin:0;padding-left:20px;display:grid;gap:6px}
+.cta2{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.cta2 .btn.pri{background:var(--primary);color:var(--card)}
+.cta2 .btn.pri:hover{background:var(--accent);color:#fff}
+.cta2 .btn.sec{color:var(--primary);border-color:var(--primary)}
+.cta2 .btn.sec:hover{background:var(--soft)}
+@media (max-width:900px){.sp2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.cols,.sp2{grid-template-columns:1fr}.pagehead{padding:18px 16px}.pagehead h1{font-size:24px}}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="hd-in in gut">
+    <div class="logo-area">
+      <img class="logo-img" src="assets/tasa-logo.png" alt="" height="96">
+      <div class="hd-text">
+        <div class="org-name" id="orgname"></div>
+        <div class="org-sub" id="orgsub"></div>
+        <div class="org-dept" id="orgdept"></div>
+      </div>
+    </div>
+    <div class="hd-right">
+      <nav class="top" id="nav" aria-label="Main"></nav>
+      <div class="lang" role="group" aria-label="Language"><button type="button" class="lb" data-l="th" aria-pressed="true">TH</button><button type="button" class="lb" data-l="en" aria-pressed="false">EN</button></div>
+    </div>
+  </div>
+</header>
+
+<main class="gut">
+  <div class="in">
+    <div class="pagehead">
+      <span class="eyebrow" id="eyebrow"></span>
+      <h1 id="h1"></h1>
+      <p id="intro"></p>
+    </div>
+
+    <section aria-labelledby="h-role">
+      <h2 id="h-role"></h2>
+      <p class="lead" id="l-role"></p>
+      <div class="cols" id="roles"></div>
+    </section>
+
+    <section aria-labelledby="h-sp">
+      <h2 id="h-sp"></h2>
+      <p class="lead" id="l-sp"></p>
+      <div class="sp2" id="sportgrid"></div>
+    </section>
+
+    <section aria-labelledby="h-tier">
+      <div class="panel">
+        <h2 id="h-tier"></h2>
+        <p class="lead" id="l-tier"></p>
+        <ul class="tl" id="tiers"></ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-src">
+      <div class="panel">
+        <h2 id="h-src"></h2>
+        <p class="lead" id="l-src"></p>
+        <ul class="src" id="srclist"></ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-ct">
+      <h2 id="h-ct"></h2>
+      <p class="lead" id="l-ct"></p>
+      <div class="cta2">
+        <a class="btn pri" href="./" id="cta1"></a>
+        <a class="btn sec" href="mailto:thaitaa@thaiaquatics.or.th" id="cta2"></a>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="app-footer" id="contact">
+  <div class="ft-in in gut">
+    <div class="ft-main">
+      <img class="ft-logo" src="assets/tasa-logo.png" alt="" height="110">
+      <div class="ft-info">
+        <strong id="ftorg"></strong>
+        <span class="ft-en">Thailand Aquatic Sports Association : TASA</span>
+        <span class="ft-dept" id="ftdept"></span>
+        <address id="ftaddr"></address>
+        <div class="ft-mail"><span id="ftmaillbl"></span><a href="mailto:thaitaa@thaiaquatics.or.th">thaitaa@thaiaquatics.or.th</a><button type="button" id="ftcopy"></button></div>
+      </div>
+    </div>
+    <div class="ft-copy">&copy; 2026 Thailand Aquatic Sports Association : TASA. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i);};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var lang='th';
+try{var sv=localStorage.getItem('tasa-lang');if(sv==='th'||sv==='en')lang=sv;else if(navigator.language&&navigator.language.toLowerCase().indexOf('th')!==0)lang='en';}catch(e){}
+var SPORTS=['swim','polo','dive','art','open','mas'];
+var COLOR={swim:'var(--swim)',polo:'var(--polo)',dive:'var(--dive)',art:'var(--art)',open:'var(--open)',mas:'var(--mas)'};
+var T={
+th:{
+  title:'เกี่ยวกับฝ่ายกิจการต่างประเทศ',
+  orgname:'สมาคมกีฬาทางน้ำแห่งประเทศไทย',orgsub:'Thailand Aquatic Sports Association : TASA',orgdept:'ฝ่ายกิจการต่างประเทศ',
+  nav:[['./home.html','หน้าแรก'],['./','ปฏิทินการแข่งขัน'],['./about.html','เกี่ยวกับฝ่ายฯ',1],['#contact','ติดต่อ']],
+  eyebrow:'Foreign Affairs Department',
+  h1:'เกี่ยวกับฝ่ายกิจการต่างประเทศ',
+  intro:'ฝ่ายกิจการต่างประเทศ สมาคมกีฬาทางน้ำแห่งประเทศไทย ทำหน้าที่ประสานงานด้านกีฬาทางน้ำกับต่างประเทศ รวบรวมและเผยแพร่ข้อมูลการแข่งขันนานาชาติเพื่อประโยชน์ต่อสมาคมสมาชิก นักกีฬา และเจ้าหน้าที่',
+  hRole:'บทบาทหน้าที่',lRole:'งานหลักของฝ่ายฯ ด้านความสัมพันธ์และข้อมูลระหว่างประเทศ',
+  roles:[['ประสานงานกับสหพันธ์','ติดต่อ World Aquatics และสหพันธ์กีฬาทางน้ำระดับทวีป ในนามของสมาคมฯ'],['รวบรวมกำหนดการแข่งขัน','ติดตามปฏิทินและรายการแข่งขันนานาชาติทั้ง 6 ชนิดกีฬา ตั้งแต่ระดับโลกจนถึงรายการที่สหพันธ์สมาชิกจัด'],['เผยแพร่ข้อมูล','แจ้งรายละเอียดรายการแข่งขัน สถานที่ และข้อมูลติดต่อผู้จัด ผ่านปฏิทินการแข่งขันนานาชาติ'],['สนับสนุนการเข้าร่วม','ให้ข้อมูลประกอบการพิจารณาส่งนักกีฬาและเจ้าหน้าที่เข้าร่วมรายการต่างประเทศ']],
+  hSp:'ชนิดกีฬาที่ติดตาม',lSp:'ครอบคลุม 6 ชนิดกีฬา ตามประเภทการแข่งขันของ World Aquatics',
+  sport:{swim:['ว่ายน้ำ','การแข่งขันว่ายน้ำในสระ'],polo:['โปโลน้ำ','รายการชาย หญิง และรุ่นอายุ'],dive:['กระโดดน้ำ','รวมรายการ World Cup และรายการนานาชาติ'],art:['ว่ายน้ำลีลา','รายการ World Cup และชิงแชมป์'],open:['ว่ายน้ำโอเพ่นวอเตอร์','การแข่งขันว่ายน้ำในน้ำเปิด'],mas:['กีฬาทางน้ำมาสเตอร์','รายการสำหรับนักกีฬากลุ่มมาสเตอร์']},
+  hTier:'ระดับรายการแข่งขัน (Tier 1–4)',lTier:'จัดระดับตามเกณฑ์ World Aquatics โดยสรุปความเป็นภาษาไทย',
+  tier:{1:'โอลิมปิกเกมส์ และการแข่งขันชิงแชมป์โลก World Aquatics',2:'World Cup ชิงแชมป์โลกรุ่นเยาวชนและรุ่นอายุ และรายการอื่นที่ World Aquatics จัดการแข่งขัน',3:'มหกรรมกีฬาระดับทวีปและภูมิภาค เช่น SEA Games, Asian Games, European Games',4:'การแข่งขันนานาชาติที่สหพันธ์สมาชิกเป็นผู้จัด'},
+  hSrc:'แหล่งข้อมูลและการปรับปรุง',lSrc:'ข้อมูลในปฏิทินรวบรวมจากแหล่งทางการ และตรวจสอบเป็นระยะ',
+  src:['เว็บไซต์และปฏิทินทางการของ World Aquatics','เว็บไซต์ของสหพันธ์ระดับทวีปและผู้จัดการแข่งขัน','ตรวจสอบและปรับปรุงข้อมูลทุก 3 วัน รายการที่ยังรอประกาศจะแสดงสถานะ "รอประกาศ" หรือ "ประมาณการ"','ควรตรวจสอบกับปฏิทินทางการของ World Aquatics อีกครั้งก่อนอ้างอิงในหนังสือราชการ'],
+  hCt:'ติดต่อฝ่ายกิจการต่างประเทศ',lCt:'สอบถามข้อมูลหรือแจ้งการแก้ไขรายการแข่งขันได้ทางอีเมลหรือที่อยู่ด้านล่างของหน้า',
+  cta1:'ดูปฏิทินการแข่งขันนานาชาติ',cta2:'ส่งอีเมลถึงฝ่ายฯ',
+  sph:'ผู้สนับสนุน',ftorg:'สำนักงานเลขาธิการ สมาคมกีฬาทางน้ำแห่งประเทศไทย',
+  addr:'ชั้น 21 อาคารเฉลิมพระเกียรติ 7 รอบ พระชนมพรรษา<br>เลขที่ 286 การกีฬาแห่งประเทศไทย ถนนรามคำแหง<br>แขวงหัวหมาก เขตบางกะปิ กรุงเทพมหานคร 10240',
+  ftdept:'ข้อมูลเพื่อการประสานงาน ฝ่ายกิจการต่างประเทศ (Foreign Affairs Department)',ftmail:'อีเมล:',copy:'คัดลอก',copied:'คัดลอกแล้ว',logoalt:'โลโก้สมาคมกีฬาทางน้ำแห่งประเทศไทย'
+},
+en:{
+  title:'About the Foreign Affairs Department',
+  orgname:'Thailand Aquatic Sports Association : TASA',orgsub:'',orgdept:'Foreign Affairs Department',
+  nav:[['./home.html','Home'],['./','Competition Calendar'],['./about.html','About',1],['#contact','Contact']],
+  eyebrow:'Foreign Affairs Department',
+  h1:'About the Foreign Affairs Department',
+  intro:'The Foreign Affairs Department of the Thailand Aquatic Sports Association coordinates international aquatic sports matters, and compiles and shares information on international competitions for member associations, athletes and officials.',
+  hRole:'Roles and responsibilities',lRole:'The department’s main work in international relations and information',
+  roles:[['Federation liaison','Communicates with World Aquatics and the continental aquatics federations on behalf of the association'],['Schedule tracking','Follows the calendar and international competitions across all 6 disciplines, from world level to events hosted by member federations'],['Information sharing','Provides event details, venues and organiser contacts through the International Competition Calendar'],['Participation support','Supplies information to help decide on sending athletes and officials to international events']],
+  hSp:'Disciplines we follow',lSp:'Six disciplines, following the World Aquatics competition categories',
+  sport:{swim:['Swimming','Pool swimming competitions'],polo:['Water Polo','Men’s, women’s and age-group events'],dive:['Diving','Including World Cups and international events'],art:['Artistic Swimming','World Cups and championships'],open:['Open Water Swimming','Open water competitions'],mas:['Masters Aquatics','Events for Masters athletes']},
+  hTier:'Event tiers (Tier 1–4)',lTier:'Based on the World Aquatics classification (summarised)',
+  tier:{1:'Olympic Games and World Aquatics Championships',2:'World Cups, World Junior/Youth and age-group Championships, and other competitions organised by World Aquatics',3:'Continental and regional multi-sport games, e.g. SEA Games, Asian Games, European Games',4:'International competitions organised by member federations'},
+  hSrc:'Sources and updates',lSrc:'Calendar data is compiled from official sources and checked regularly',
+  src:['Official World Aquatics website and calendar','Websites of the continental federations and event organisers','Data is checked and refreshed every 3 days; events still awaiting announcement are marked “awaiting announcement” or “estimated”','Please check the official World Aquatics calendar again before citing in official correspondence'],
+  hCt:'Contact the Foreign Affairs Department',lCt:'For enquiries or corrections to event information, use the email below or the address at the bottom of the page',
+  cta1:'View the international calendar',cta2:'Email the department',
+  sph:'Sponsors',ftorg:'Secretariat, Thailand Aquatic Sports Association',
+  addr:'Floor 21, 7th Cycle Birthday Anniversary Commemoration Building<br>286 Sports Authority of Thailand, Ramkhamhaeng Road<br>Hua Mak, Bang Kapi, Bangkok 10240',
+  ftdept:'Information for coordination, Foreign Affairs Department',ftmail:'Email:',copy:'Copy',copied:'Copied',logoalt:'Thailand Aquatic Sports Association logo'
+}};
+function t(){return T[lang];}
+function render(){
+  var x=t();document.documentElement.lang=lang;document.title=x.title;
+  $('orgname').textContent=x.orgname;$('orgsub').textContent=x.orgsub;$('orgdept').textContent=x.orgdept;
+  document.querySelector('.logo-img').alt=x.logoalt;
+  $('nav').innerHTML=x.nav.map(function(n){return '<a href="'+n[0]+'"'+(n[2]?' aria-current="page"':'')+'>'+esc(n[1])+'</a>';}).join('');
+  Array.prototype.forEach.call(document.querySelectorAll('.lb'),function(b){b.setAttribute('aria-pressed',b.dataset.l===lang?'true':'false');});
+  $('eyebrow').textContent=x.eyebrow;$('h1').textContent=x.h1;$('intro').textContent=x.intro;
+  $('h-role').textContent=x.hRole;$('l-role').textContent=x.lRole;
+  $('roles').innerHTML=x.roles.map(function(a,i){return '<div class="ab"><span class="no">'+(i+1)+'</span><h3>'+esc(a[0])+'</h3><p>'+esc(a[1])+'</p></div>';}).join('');
+  $('h-sp').textContent=x.hSp;$('l-sp').textContent=x.lSp;
+  $('sportgrid').innerHTML=SPORTS.map(function(k){return '<div class="sp" style="--c:'+COLOR[k]+'"><h3>'+esc(x.sport[k][0])+'</h3><p>'+esc(x.sport[k][1])+'</p></div>';}).join('');
+  $('h-tier').textContent=x.hTier;$('l-tier').textContent=x.lTier;
+  $('tiers').innerHTML=[1,2,3,4].map(function(n){return '<li><span class="tg">Tier '+n+'</span><span>'+esc(x.tier[n])+'</span></li>';}).join('');
+  $('h-src').textContent=x.hSrc;$('l-src').textContent=x.lSrc;
+  $('srclist').innerHTML=x.src.map(function(s){return '<li>'+esc(s)+'</li>';}).join('');
+  $('h-ct').textContent=x.hCt;$('l-ct').textContent=x.lCt;$('cta1').textContent=x.cta1;$('cta2').textContent=x.cta2;
+  $('ftorg').textContent=x.ftorg;$('ftaddr').innerHTML=x.addr;$('ftdept').textContent=x.ftdept;$('ftmaillbl').textContent=x.ftmail;$('ftcopy').textContent=x.copy;
+}
+document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('.lb');if(b){lang=b.dataset.l;try{localStorage.setItem('tasa-lang',lang);}catch(e){}render();}});
+$('ftcopy').addEventListener('click',function(){var x=t(),m='thaitaa@thaiaquatics.or.th';
+  function done(){$('ftcopy').textContent=x.copied;setTimeout(function(){$('ftcopy').textContent=t().copy;},1500);}
+  try{navigator.clipboard.writeText(m).then(done,function(){});}catch(e){}});
+render();
+})();
+</script>
+</body>
+</html>
