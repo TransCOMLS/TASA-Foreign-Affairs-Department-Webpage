@@ -129,9 +129,21 @@ h2{margin:0 0 4px;font-size:22px;font-weight:700;color:var(--primary);text-wrap:
 .ft-en{display:block;color:#fff;font-size:16px;margin-bottom:6px}
 .ft-dept{display:block;margin-bottom:6px}
 address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
-.ft-contact{margin:4px 0 6px;font-size:15px;line-height:1.75}
-.ft-row{display:flex;gap:8px;flex-wrap:wrap}
-.ft-row a,.ft-row .ft-val{color:#fff}
+.ft-main{justify-content:center}
+.ft-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 44px;width:100%;max-width:1180px;margin-top:30px}
+.ft-col{text-align:left}
+.ft-col h3{margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.55);color:#fff;font-size:16px;font-weight:600;line-height:1.4}
+.ft-list{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:15px;line-height:1.6}
+.ft-list a,.ft-row a,.ft-row .ft-val{color:#fff}
+.ft-list a{text-decoration:none}
+.ft-list a:hover,.ft-list a:focus-visible{text-decoration:underline}
+.ft-list a[aria-current="page"]{font-weight:700}
+.ft-contact{display:grid;gap:10px;font-size:15px;line-height:1.6}
+.ft-row{display:flex;gap:12px;align-items:flex-start}
+.ft-ic{flex:none;color:#fff;margin-top:2px}
+.ft-txt{min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;overflow-wrap:anywhere}
+.ft-txt.ft-mail{display:flex;margin-top:0;justify-content:flex-start}
+@media (max-width:760px){.ft-cols{grid-template-columns:1fr;gap:24px}}
 .ft-mail{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
 .ft-mail a{color:#fff}
 .ft-mail button{font-family:var(--font);font-size:12px;padding:2px 10px;background:transparent;color:#fff;border:1px solid var(--ft-line);border-radius:6px;cursor:pointer}
@@ -162,7 +174,7 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
   .panel{padding:16px}
   .sp-list li{height:72px}
   .ft-main{flex-direction:column;text-align:center}
-  .ft-mail,.ft-row{justify-content:center}
+  .ft-mail{justify-content:flex-start}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
@@ -352,14 +364,27 @@ progress[hidden]{display:none}
         <span class="ft-en">Thailand Aquatic Sports Association : TASA</span>
         <span class="ft-dept" id="ftdept"></span>
         <address id="ftaddr"></address>
-        <div class="ft-contact">
-          <div class="ft-row"><span class="ft-lbl" id="ftl-office"></span><a href="tel:+6621709468">(+66)2 170 9468</a></div>
-          <div class="ft-row"><span class="ft-lbl" id="ftl-hot"></span><a href="tel:+66930135268">(+66)93 013 5268</a></div>
-          <div class="ft-row"><span class="ft-lbl" id="ftl-web"></span><a href="https://thaiaquatics.or.th/" target="_blank" rel="noopener">thaiaquatics.or.th</a></div>
-          <div class="ft-row"><span class="ft-lbl" id="ftl-hours"></span><span class="ft-val" id="ftv-hours"></span></div>
-        </div>
-        <div class="ft-mail"><span id="ftmaillbl"></span><a href="mailto:thaitaa@thaiaquatics.or.th">thaitaa@thaiaquatics.or.th</a><button type="button" id="ftcopy"></button></div>
       </div>
+    </div>
+    <div class="ft-cols">
+      <section class="ft-col" aria-labelledby="fth-menu">
+        <h3 id="fth-menu"></h3>
+        <ul class="ft-list" id="ftnav"></ul>
+      </section>
+      <section class="ft-col" aria-labelledby="fth-rel">
+        <h3 id="fth-rel"></h3>
+        <ul class="ft-list" id="ftrel"></ul>
+      </section>
+      <section class="ft-col" aria-labelledby="fth-con">
+        <h3 id="fth-con"></h3>
+        <div class="ft-contact">
+          <div class="ft-row"><svg class="ft-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="ft-txt"><span class="ft-lbl" id="ftl-office"></span><a href="tel:+6621709468">(+66)2 170 9468</a></span></div>
+          <div class="ft-row"><svg class="ft-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94"/></svg><span class="ft-txt"><span class="ft-lbl" id="ftl-hot"></span><a href="tel:+66930135268">(+66)93 013 5268</a></span></div>
+          <div class="ft-row"><svg class="ft-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span class="ft-txt ft-mail"><span id="ftmaillbl"></span><a href="mailto:thaitaa@thaiaquatics.or.th" id="ftmail">thaitaa@thaiaquatics.or.th</a><button type="button" id="ftcopy"></button></span></div>
+          <div class="ft-row"><svg class="ft-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span class="ft-txt"><span class="ft-lbl" id="ftl-web"></span><a href="https://thaiaquatics.or.th/" target="_blank" rel="noopener">thaiaquatics.or.th</a></span></div>
+          <div class="ft-row"><svg class="ft-ic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span class="ft-txt"><span class="ft-lbl" id="ftl-hours"></span><span class="ft-val" id="ftv-hours"></span></span></div>
+        </div>
+      </section>
     </div>
     <div class="ft-copy">&copy; 2026 Thailand Aquatic Sports Association : TASA. All rights reserved.</div>
   </div>
@@ -372,6 +397,15 @@ var ENDPOINT='https://script.google.com/macros/s/AKfycbzPbvg_x2gY-_xST5bbmV-IH7c
 var FALLBACK_EMAIL='thaitaa@thaiaquatics.or.th';
 
 var $=function(i){return document.getElementById(i);};
+function ftExtra(lang,nav){
+  var en=lang==='en';
+  var D=en?{menu:'Menu',rel:'Related organizations',con:'Contact',orgs:['World Aquatics','Asia Aquatics','National Olympic Committee of Thailand','World Anti-Doping Agency (WADA)']}
+          :{menu:'เมนู',rel:'หน่วยงานที่เกี่ยวข้อง',con:'ช่องทางการติดต่อ',orgs:['สหพันธ์กีฬาทางน้ำโลก (World Aquatics)','สหพันธ์กีฬาทางน้ำเอเชีย (Asia Aquatics)','คณะกรรมการโอลิมปิคแห่งประเทศไทยฯ','องค์กรต่อต้านการใช้สารต้องห้ามโลก (WADA)']};
+  var U=['https://www.worldaquatics.com','https://www.asiaaquatics.net','https://olympicthai.org','https://www.wada-ama.org/en'];
+  document.getElementById('fth-menu').textContent=D.menu;document.getElementById('fth-rel').textContent=D.rel;document.getElementById('fth-con').textContent=D.con;
+  document.getElementById('ftnav').innerHTML=nav.filter(function(n){return n[0]!=='#contact';}).map(function(n){return '<li><a href="'+n[0]+'"'+(n[2]?' aria-current="page"':'')+'>'+esc(n[1])+'</a></li>';}).join('');
+  document.getElementById('ftrel').innerHTML=D.orgs.map(function(o,i){return '<li><a href="'+U[i]+'" target="_blank" rel="noopener">'+esc(o)+'</a></li>';}).join('');
+}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var lang='th';
 try{var sv=localStorage.getItem('tasa-lang');if(sv==='th'||sv==='en')lang=sv;else if(navigator.language&&navigator.language.toLowerCase().indexOf('th')!==0)lang='en';}catch(e){}
@@ -386,7 +420,7 @@ function render(){
   Array.prototype.forEach.call(document.querySelectorAll('[data-t]'),function(n){var v=tt(n.getAttribute('data-t'));if(n.id==='ftaddr')n.innerHTML=v;else n.textContent=v;});
   Array.prototype.forEach.call(document.querySelectorAll('[data-ph]'),function(n){n.placeholder=tt(n.getAttribute('data-ph'));});
   $('orgname').textContent=tt('orgname');$('orgsub').textContent=lang==='th'?tt('orgsub'):'';$('orgdept').textContent=tt('orgdept');
-  $('ftorg').textContent=tt('ftorg');$('ftaddr').innerHTML=tt('addr');$('ftdept').textContent=tt('ftdept');$('ftmaillbl').textContent=tt('ftmail');$('ftcopy').textContent=tt('copy');$('ftl-office').textContent=tt('ftoffice');$('ftl-hot').textContent=tt('fthot');$('ftl-web').textContent=tt('ftweb');$('ftl-hours').textContent=tt('fthours');$('ftv-hours').textContent=tt('fthoursv');
+  $('ftorg').textContent=tt('ftorg');$('ftaddr').innerHTML=tt('addr');$('ftdept').textContent=tt('ftdept');$('ftmaillbl').textContent=tt('ftmail');$('ftcopy').textContent=tt('copy');$('ftl-office').textContent=tt('ftoffice');$('ftl-hot').textContent=tt('fthot');$('ftl-web').textContent=tt('ftweb');$('ftl-hours').textContent=tt('fthours');$('ftv-hours').textContent=tt('fthoursv');ftExtra(lang,NAV[lang]);
   document.querySelector('.logo-img').alt=tt('logoalt');
   $('nav').innerHTML=NAV[lang].map(function(n){return '<a href="'+n[0]+'"'+(n[2]?' aria-current="page"':'')+'>'+esc(n[1])+'</a>';}).join('');
   Array.prototype.forEach.call(document.querySelectorAll('.lb'),function(b){b.setAttribute('aria-pressed',b.dataset.l===lang?'true':'false');});
