@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>แจ้งเรื่องร้องเรียนด้านความเป็นธรรมทางกีฬา</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Homepage of the TASA Foreign Affairs Department. Same design tokens as the calendar page (index.html).
+   Upcoming events are read from the #events-data JSON inside index.html, so the scheduled calendar update refreshes this page too. */
+:root{
+  --bg:#f3f6fa; --card:#ffffff; --ink:#1f2d3d; --muted:#64748b; --line:#e2e8f0; --primary:#17406b; --accent:#2b6cb0; --soft:#eaf3fb;
+  --swim:#1d4ed8; --polo:#15803d; --dive:#c2410c; --art:#9333ea; --open:#0e7490; --mas:#be185d;
+  --font:'Noto Sans Thai','TH Sarabun New',Tahoma,sans-serif;
+  --hd-a:#1a365d; --hd-b:#2a4365; --hd-sub:#90cdf4; --ft-bg:#1a202c; --ft-ink:#a0aec0; --ft-line:#2d3748; --ft-top:#3182ce;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1621; --card:#152233; --ink:#e6edf5; --muted:#93a3b8; --line:#26364a; --primary:#9cc4ee; --accent:#6aa9e6; --soft:#16293f;
+  --swim:#3b6ff0; --polo:#1f9d55; --dive:#e0622a; --art:#a855f7; --open:#1798b8; --mas:#db2777;
+  --hd-a:#0f2a47; --hd-b:#17406b; --hd-sub:#9cc4ee; --ft-bg:#0a1019; --ft-ink:#93a3b8; --ft-line:#1f2d40; --ft-top:#2b6cb0;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.6;display:flex;flex-direction:column;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:101;background:var(--hd-a)}
+a{color:var(--accent)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.in{max-width:1180px;margin:0 auto}
+
+/* header */
+.app-header{background:linear-gradient(135deg,var(--hd-a) 0%,var(--hd-b) 100%);color:#fff;padding-block:18px;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.hd-in{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px 20px}
+.logo-area{display:flex;align-items:center;gap:14px;min-width:0}
+.logo-img{flex:none;height:96px;width:auto;display:block}
+.hd-text{display:flex;flex-direction:column;min-width:0}
+.org-name{font-size:24px;font-weight:700;letter-spacing:.3px;line-height:1.3}
+.org-sub{font-size:14px;font-weight:500;color:var(--hd-sub);text-transform:uppercase;letter-spacing:1px}
+.org-dept{margin-top:4px;font-size:16px;font-weight:600;line-height:1.3}
+.hd-right{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:flex-end}
+nav.top{display:flex;flex-wrap:wrap;gap:4px 6px}
+nav.top a{color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:6px 12px;border-radius:999px}
+nav.top a:hover{background:rgba(255,255,255,.12)}
+nav.top a[aria-current="page"]{background:rgba(255,255,255,.26);box-shadow:inset 0 -3px 0 #fff}
+.lang{display:inline-flex;border:1px solid rgba(255,255,255,.4);border-radius:999px;overflow:hidden}
+.lang button{font-family:var(--font);font-weight:600;border:0;background:transparent;color:#fff;padding:5px 12px;font-size:13px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:#fff;color:var(--hd-a)}
+.lang button:hover:not([aria-pressed="true"]){background:rgba(255,255,255,.25)}
+a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.app-header a:focus-visible,.app-header button:focus-visible,.hero a:focus-visible{outline-color:#fff}
+
+/* layout */
+main{flex:1;padding-block:24px 36px}
+section{margin-top:28px}
+h2{margin:0 0 4px;font-size:22px;font-weight:700;color:var(--primary);text-wrap:balance}
+.lead{margin:0 0 16px;color:var(--muted);font-size:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:44px 40px 70px;
+  background:linear-gradient(135deg,#17406b 0%,#2b6cb0 100%);box-shadow:0 8px 24px rgba(23,64,107,.2)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;opacity:.5;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 64' preserveAspectRatio='none'%3E%3Cpath d='M0 36 Q75 8 150 36 T300 36 T450 36 T600 36 V64 H0Z' fill='%23ffffff' fill-opacity='.14'/%3E%3Cpath d='M0 46 Q75 20 150 46 T300 46 T450 46 T600 46 V64 H0Z' fill='%23ffffff' fill-opacity='.14'/%3E%3C/svg%3E") bottom/600px 64px repeat-x}
+.hero>*{position:relative;z-index:1}
+.eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#bee3f8;margin-bottom:8px}
+.hero h1{margin:0 0 10px;font-size:36px;line-height:1.25;font-weight:700;text-wrap:balance;max-width:20ch}
+.hero p{margin:0;max-width:60ch;font-size:16px;color:#e6f0fa}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font);font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;padding:11px 20px;border:1px solid transparent}
+.btn.pri{background:#fff;color:#17406b}
+.btn.pri:hover{background:#e6f0fa}
+.btn.sec{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+.btn.sec:hover{background:rgba(255,255,255,.16)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:-40px;position:relative;z-index:2;padding-inline:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 4px 14px rgba(15,35,60,.08)}
+.stat b{display:block;font-size:26px;line-height:1.2;color:var(--primary);font-weight:700}
+.stat span{font-size:13px;color:var(--muted)}
+
+/* sports */
+.sports{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.sp{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:14px 16px;min-width:0}
+.sp h3{margin:0;font-size:16px;font-weight:600;color:var(--ink)}
+.sp .n{font-size:13px;color:var(--muted)}
+.sp .nx{margin-top:8px;font-size:13px;line-height:1.5;color:var(--ink);overflow-wrap:anywhere}
+.sp .nx i{font-style:normal;color:var(--muted)}
+
+/* upcoming */
+.up{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.up li{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:6px 16px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.up li:first-child{border-top:0;padding-top:2px}
+.up .dt{font-weight:600;color:var(--primary);font-size:14px}
+.up .nm{min-width:0;font-weight:500}
+.up .nm small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#fff;background:var(--c);border-radius:999px;padding:2px 10px;white-space:nowrap}
+.tag b{background:rgba(255,255,255,.25);border-radius:4px;padding:0 5px}
+.more{margin-top:14px}
+.more a{font-weight:600}
+.empty{color:var(--muted);margin:0}
+.upd{margin-top:14px;background:var(--soft);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--ink)}
+.upd b{color:var(--primary)}
+
+/* about */
+.about{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.ab{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.ab .no{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--primary);color:var(--card);font-weight:700;font-size:14px;margin-bottom:8px}
+.ab h3{margin:0 0 4px;font-size:15px;font-weight:600}
+.ab p{margin:0;color:var(--muted);font-size:13.5px}
+
+/* links */
+.links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.lk{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.lk:hover{border-color:var(--accent);background:var(--soft)}
+.lk b{display:block;color:var(--primary)}
+.lk span{font-size:13px;color:var(--muted)}
+
+/* sponsors + footer */
+.sponsors h3{margin:0 0 14px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}
+.sp-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.sp-list li{display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:12px;height:84px;padding:10px 14px}
+.sp-list img{display:block;max-height:100%;max-width:100%;width:auto;height:auto;object-fit:contain}
+.app-footer{background:var(--ft-bg);color:var(--ft-ink);border-top:4px solid var(--ft-top);padding-block:28px}
+.ft-in{display:flex;flex-direction:column;align-items:center;gap:14px}
+.ft-main{display:flex;align-items:center;gap:24px;width:100%;max-width:900px}
+.ft-logo{flex:none;height:110px;width:auto;display:block}
+.ft-info{min-width:0}
+.ft-info strong{display:block;color:#fff;font-size:18px;line-height:1.4}
+.ft-en{display:block;color:#fff;font-size:16px;margin-bottom:6px}
+.ft-dept{display:block;margin-bottom:6px}
+address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
+.ft-mail{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.ft-mail a{color:#fff}
+.ft-mail button{font-family:var(--font);font-size:12px;padding:2px 10px;background:transparent;color:#fff;border:1px solid var(--ft-line);border-radius:6px;cursor:pointer}
+.ft-mail button:hover{background:var(--accent)}
+.ft-copy{width:100%;max-width:600px;border-top:1px solid var(--ft-line);padding-top:14px;font-size:13px;text-align:center}
+
+@media (max-width:900px){
+  .sports,.links{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .about{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sp-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .hd-in{flex-direction:column;text-align:center}
+  .logo-area{flex-direction:column;gap:8px}
+  .hd-right{justify-content:center}
+  .org-name{font-size:19px}
+  .logo-img{height:84px}
+  nav.top{justify-content:center}
+  .hero{padding:28px 20px 60px;border-radius:16px}
+  .hero h1{font-size:27px}
+  .stats{padding-inline:8px;margin-top:-34px}
+  .stat b{font-size:22px}
+  .sports,.links,.about{grid-template-columns:1fr}
+  .up li{grid-template-columns:minmax(0,1fr);gap:2px}
+  .up li .tag{justify-self:start;margin-top:4px}
+  .panel{padding:16px}
+  .sp-list li{height:72px}
+  .ft-main{flex-direction:column;text-align:center}
+  .ft-mail{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* report form */
+.narrow{max-width:860px;margin:0 auto}
+.pagehead{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px}
+.pagehead .eyebrow{color:var(--accent)}
+.pagehead h1{margin:0 0 8px;font-size:30px;line-height:1.25;color:var(--primary);text-wrap:balance}
+.pagehead p{margin:0;max-width:70ch}
+.box{border-radius:12px;padding:14px 18px;margin-top:16px;border:1px solid var(--line);background:var(--soft)}
+.box h2{font-size:16px;margin:0 0 6px;color:var(--primary)}
+.box ul{margin:6px 0 0;padding-left:20px;display:grid;gap:5px;font-size:14px}
+.box.danger{background:#fff5f5;border-color:#fc8181;color:#742a2a}
+.box.danger h2{color:#9b2c2c}
+.box.closed{background:#fff7e6;border-color:#f6ad55;color:#7b341e}
+.box.closed h2{color:#b45309}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .box.danger{background:#2a1d22;border-color:#8a3b3b;color:#f5c2c2}:root:not([data-theme="light"]) .box.danger h2{color:#f08a8a}:root:not([data-theme="light"]) .box.closed{background:#2d2414;border-color:#8a6a2b;color:#f3d9a6}:root:not([data-theme="light"]) .box.closed h2{color:#f6ad55}}
+form{display:grid;gap:16px;margin-top:20px}
+fieldset{border:1px solid var(--line);border-radius:14px;padding:6px 20px 20px;margin:0;background:var(--card);min-width:0}
+legend{font-weight:700;font-size:17px;color:var(--primary);padding:0 8px}
+.fld{display:grid;gap:6px;margin-top:14px;min-width:0}
+.fld>label,.fld>.lbl{font-weight:600;font-size:14px}
+.hint{font-size:13px;color:var(--muted);font-weight:400}
+.req{color:#c53030;margin-left:3px}
+input[type=text],select,textarea{font-family:var(--font);font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;width:100%;min-width:0}
+textarea{min-height:140px;resize:vertical;line-height:1.55}
+textarea.sm{min-height:84px}
+input[type=text]:focus,select:focus,textarea:focus{outline:3px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;min-width:0;font-size:14.5px;line-height:1.45}
+.chk:hover{border-color:var(--accent)}
+.chk input{flex:none;width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent)}
+.chk:has(input:checked){border-color:var(--accent);background:var(--soft)}
+.chk.wide{grid-column:1/-1}
+.subs{grid-column:1/-1;margin-left:14px;padding-left:14px;border-left:3px solid var(--accent);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.subs[hidden]{display:none}
+.subs .sh{grid-column:1/-1;font-size:13px;font-weight:600;color:var(--primary)}
+.radios{display:grid;gap:8px;margin-top:6px}
+.radios.row{grid-template-columns:repeat(3,minmax(0,1fr))}
+.idbox[hidden]{display:none}
+.errs{border:1px solid #fc8181;background:#fff5f5;color:#742a2a;border-radius:12px;padding:12px 16px}
+.errs[hidden]{display:none}
+.errs ul{margin:6px 0 0;padding-left:20px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .errs{background:#2a1d22;border-color:#8a3b3b;color:#f5c2c2}}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.submit{font-family:var(--font);font-size:16px;font-weight:700;color:#fff;background:var(--primary);border:0;border-radius:10px;padding:12px 28px;cursor:pointer}
+.submit:hover:not(:disabled){background:var(--accent)}
+.submit:disabled{opacity:.5;cursor:not-allowed}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .submit{color:#0e1621}}
+.status{font-size:14px;color:var(--muted)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.done{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--polo);border-radius:14px;padding:22px 24px;margin-top:20px}
+.done[hidden]{display:none}
+.done h2{margin:0 0 6px;color:var(--polo)}
+.refrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.ref{font-family:ui-monospace,Consolas,monospace;font-size:22px;font-weight:700;letter-spacing:.04em;background:var(--soft);border-radius:8px;padding:6px 14px;color:var(--primary)}
+.done button.ghost{font-family:var(--font);font-weight:600;color:var(--primary);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 14px;cursor:pointer}
+.done button.ghost:hover{background:var(--accent);color:#fff}
+@media (max-width:640px){.checks,.subs,.radios.row{grid-template-columns:1fr}.pagehead{padding:18px 16px}.pagehead h1{font-size:24px}fieldset{padding:4px 14px 16px}.ref{font-size:18px}}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="hd-in in gut">
+    <div class="logo-area">
+      <img class="logo-img" src="assets/tasa-logo.png" alt="" height="96">
+      <div class="hd-text">
+        <div class="org-name" id="orgname"></div>
+        <div class="org-sub" id="orgsub"></div>
+        <div class="org-dept" id="orgdept"></div>
+      </div>
+    </div>
+    <div class="hd-right">
+      <nav class="top" id="nav" aria-label="Main"></nav>
+      <div class="lang" role="group" aria-label="Language"><button type="button" class="lb" data-l="th" aria-pressed="true">TH</button><button type="button" class="lb" data-l="en" aria-pressed="false">EN</button></div>
+    </div>
+  </div>
+</header>
+
+<main class="gut">
+  <div class="in">
+
+<div class="narrow">
+  <div class="pagehead"><span class="eyebrow" data-t="eyebrow"></span><h1 data-t="h1"></h1><p data-t="intro"></p></div>
+  <div class="box danger" role="note"><h2 data-t="emT"></h2><div data-t="emB"></div></div>
+  <div class="box closed" id="closedbox" hidden><h2 data-t="clT"></h2><div><span data-t="clB"></span> <a href="mailto:thaitaa@thaiaquatics.or.th">thaitaa@thaiaquatics.or.th</a></div></div>
+  <div class="box"><h2 data-t="bfT"></h2><ul><li data-t="bf0"></li><li data-t="bf1"></li><li data-t="bf2"></li><li data-t="bf3"></li><li data-t="bf4"></li><li data-t="bf5"></li></ul></div>
+
+  <div class="done" id="done" hidden tabindex="-1">
+    <h2 data-t="okT"></h2><div data-t="okB"></div>
+    <div class="refrow"><span><span data-t="okR"></span>:</span> <span class="ref" id="refno"></span> <button type="button" class="ghost" id="copyref" data-t="copy"></button></div>
+    <button type="button" class="ghost" id="again" data-t="again"></button>
+  </div>
+
+  <form id="f" novalidate>
+    <div class="errs" id="errs" role="alert" tabindex="-1" hidden></div>
+    <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+    <fieldset><legend data-t="s1"></legend>
+      <div class="hint" data-t="s1h" style="margin-top:6px"></div>
+      <div class="checks" id="cats"><label class="chk"><input type="checkbox" name="cat" value="manip"><span data-t="cat_manip"></span></label><label class="chk"><input type="checkbox" name="cat" value="bet"><span data-t="cat_bet"></span></label><label class="chk"><input type="checkbox" name="cat" value="bribe"><span data-t="cat_bribe"></span></label><label class="chk"><input type="checkbox" name="cat" value="inside"><span data-t="cat_inside"></span></label><label class="chk"><input type="checkbox" name="cat" value="coi"><span data-t="cat_coi"></span></label><label class="chk"><input type="checkbox" name="cat" value="fraud"><span data-t="cat_fraud"></span></label><label class="chk"><input type="checkbox" name="cat" value="harass"><span data-t="cat_harass"></span></label><div class="subs" id="subs" hidden><div class="sh" data-t="subsH"></div><label class="chk"><input type="checkbox" name="hsub" value="hazing"><span data-t="sub_hazing"></span></label><label class="chk"><input type="checkbox" name="hsub" value="neglect"><span data-t="sub_neglect"></span></label><label class="chk"><input type="checkbox" name="hsub" value="psych"><span data-t="sub_psych"></span></label><label class="chk"><input type="checkbox" name="hsub" value="phys"><span data-t="sub_phys"></span></label><label class="chk"><input type="checkbox" name="hsub" value="sexh"><span data-t="sub_sexh"></span></label><label class="chk"><input type="checkbox" name="hsub" value="sexa"><span data-t="sub_sexa"></span></label></div><label class="chk"><input type="checkbox" name="cat" value="disc"><span data-t="cat_disc"></span></label><label class="chk"><input type="checkbox" name="cat" value="interf"><span data-t="cat_interf"></span></label><label class="chk"><input type="checkbox" name="cat" value="gov"><span data-t="cat_gov"></span></label><label class="chk"><input type="checkbox" name="cat" value="other"><span data-t="cat_other"></span></label></div>
+    </fieldset>
+
+    <fieldset><legend data-t="s2"></legend>
+      <div class="fld"><label for="desc"><span data-t="fWhat"></span><span class="req">*</span></label><textarea id="desc" maxlength="5000"></textarea><span class="hint" data-t="fWhatH"></span></div>
+      <div class="fld"><label for="when" data-t="fWhen"></label><input type="text" id="when" maxlength="200" data-ph="phWhen"></div>
+      <div class="fld"><label for="event" data-t="fEvent"></label><input type="text" id="event" maxlength="300"></div>
+      <div class="fld"><label for="place" data-t="fPlace"></label><input type="text" id="place" maxlength="300"></div>
+      <div class="fld"><span class="lbl" data-t="fMinor"></span><span class="hint" data-t="fMinorH"></span>
+        <div class="radios row">
+          <label class="chk"><input type="radio" name="minor" value="yes"><span data-t="yes"></span></label>
+          <label class="chk"><input type="radio" name="minor" value="no"><span data-t="no"></span></label>
+          <label class="chk"><input type="radio" name="minor" value="unsure"><span data-t="unsure"></span></label>
+        </div></div>
+      <div class="checks"><label class="chk wide"><input type="checkbox" id="danger"><span data-t="fDanger"></span></label></div>
+    </fieldset>
+
+    <fieldset><legend data-t="s3"></legend>
+      <div class="fld"><label for="subj" data-t="fSubj"></label><input type="text" id="subj" maxlength="500"></div>
+      <div class="fld"><label for="subjrole" data-t="fSubjRole"></label><select id="subjrole"><option value="" data-t="subj_none"></option><option value="athlete" data-t="subj_athlete"></option><option value="asp" data-t="subj_asp"></option><option value="tech" data-t="subj_tech"></option><option value="tasa" data-t="subj_tasa"></option><option value="club" data-t="subj_club"></option><option value="org" data-t="subj_org"></option><option value="other" data-t="subj_other"></option></select></div>
+      <div class="fld"><label for="evid" data-t="fEvid"></label><textarea id="evid" class="sm" maxlength="2000" data-ph="phEvid"></textarea></div>
+      <div class="fld"><label for="links" data-t="fLinks"></label><input type="text" id="links" maxlength="1000"><span class="hint" data-t="fLinksH"></span></div>
+    </fieldset>
+
+    <fieldset><legend data-t="s4"></legend>
+      <div class="radios">
+        <label class="chk"><input type="radio" name="mode" value="anon"><span><b data-t="anon"></b><br><span class="hint" data-t="anonH"></span></span></label>
+        <label class="chk"><input type="radio" name="mode" value="ident"><span><b data-t="ident"></b><br><span class="hint" data-t="identH"></span></span></label>
+      </div>
+      <div class="idbox" id="idbox" hidden>
+        <div class="fld"><label for="rname"><span data-t="fName"></span><span class="req">*</span></label><input type="text" id="rname" maxlength="200" autocomplete="name"></div>
+        <div class="fld"><label for="rrel" data-t="fRel"></label><select id="rrel"><option value="" data-t="rel_none"></option><option value="athlete" data-t="rel_athlete"></option><option value="asp" data-t="rel_asp"></option><option value="tech" data-t="rel_tech"></option><option value="staff" data-t="rel_staff"></option><option value="parent" data-t="rel_parent"></option><option value="club" data-t="rel_club"></option><option value="other" data-t="rel_other"></option></select></div>
+        <div class="fld"><label for="rcontact"><span data-t="fContact"></span><span class="req">*</span></label><input type="text" id="rcontact" maxlength="200" autocomplete="email"></div>
+        <div class="checks"><label class="chk wide"><input type="checkbox" id="rdisc"><span data-t="fDisc"></span></label></div>
+      </div>
+    </fieldset>
+
+    <fieldset><legend data-t="s5"></legend>
+      <div class="checks">
+        <label class="chk wide"><input type="checkbox" id="ctruth"><span data-t="cTruth"></span></label>
+        <label class="chk wide"><input type="checkbox" id="cpriv"><span data-t="cPriv"></span></label>
+      </div>
+    </fieldset>
+
+    <div class="actions"><button type="submit" class="submit" id="submit" data-t="submit"></button><span class="status" id="status" role="status"></span></div>
+  </form>
+</div>
+  </div>
+</main>
+
+<footer class="app-footer" id="contact">
+  <div class="ft-in in gut">
+    <div class="ft-main">
+      <img class="ft-logo" src="assets/tasa-logo.png" alt="" height="110">
+      <div class="ft-info">
+        <strong id="ftorg"></strong>
+        <span class="ft-en">Thailand Aquatic Sports Association : TASA</span>
+        <span class="ft-dept" id="ftdept"></span>
+        <address id="ftaddr"></address>
+        <div class="ft-mail"><span id="ftmaillbl"></span><a href="mailto:thaitaa@thaiaquatics.or.th">thaitaa@thaiaquatics.or.th</a><button type="button" id="ftcopy"></button></div>
+      </div>
+    </div>
+    <div class="ft-copy">&copy; 2026 Thailand Aquatic Sports Association : TASA. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+/* Where reports are sent: the Google Apps Script web app URL (see the setup notes). Leave empty until it is deployed. */
+var ENDPOINT='';
+var FALLBACK_EMAIL='thaitaa@thaiaquatics.or.th';
+
+var $=function(i){return document.getElementById(i);};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+var lang='th';
+try{var sv=localStorage.getItem('tasa-lang');if(sv==='th'||sv==='en')lang=sv;else if(navigator.language&&navigator.language.toLowerCase().indexOf('th')!==0)lang='en';}catch(e){}
+var T={"th": {"cat_manip": "การล็อกผลหรือบิดเบือนผลการแข่งขัน", "cat_bet": "การพนันที่เกี่ยวข้องกับกีฬาทางน้ำ หรือความสัมพันธ์กับองค์กรการพนัน", "cat_bribe": "การให้หรือรับสินบน ของขวัญ การเลี้ยงรับรอง หรือผลประโยชน์ที่ไม่เหมาะสม", "cat_inside": "การใช้หรือเปิดเผยข้อมูลภายในโดยมิชอบ", "cat_coi": "ผลประโยชน์ทับซ้อน", "cat_fraud": "การปลอมแปลงเอกสาร การให้ข้อมูลเท็จ หรือการใช้เงินผิดวัตถุประสงค์", "cat_harass": "การล่วงละเมิดและการกระทำที่เป็นอันตรายต่อนักกีฬาหรือผู้เกี่ยวข้อง", "cat_disc": "การเลือกปฏิบัติ หรือพฤติกรรมก้าวร้าว รุนแรง ไม่เคารพผู้อื่น", "cat_interf": "การแทรกแซงการจัดการแข่งขัน การประชุม หรือสนามแข่งขัน", "cat_gov": "ความไม่โปร่งใสในการเลือกตั้ง หรือการเสนอตัวเป็นเจ้าภาพจัดการแข่งขัน", "cat_other": "เรื่องอื่นๆ ที่เกี่ยวกับความเป็นธรรมทางกีฬา", "sub_hazing": "การกลั่นแกล้งหรือรับน้องที่สร้างความอับอายหรือเสี่ยงอันตราย", "sub_neglect": "การละเลยหน้าที่ดูแล", "sub_psych": "การทารุณกรรมทางจิตใจ", "sub_phys": "การทารุณกรรมทางร่างกาย", "sub_sexh": "การคุกคามทางเพศ", "sub_sexa": "การล่วงละเมิดทางเพศ", "subj_none": "ไม่ทราบ หรือไม่ระบุ", "subj_athlete": "นักกีฬา", "subj_asp": "ผู้ฝึกสอน ผู้จัดการทีม หรือบุคลากรสนับสนุนนักกีฬา", "subj_tech": "ผู้ตัดสินหรือเจ้าหน้าที่เทคนิค", "subj_tasa": "กรรมการ เจ้าหน้าที่ หรือเจ้าหน้าที่สำนักงานของสมาคมฯ", "subj_club": "สมาคมสมาชิกหรือสโมสร", "subj_org": "ผู้จัดการแข่งขัน", "subj_other": "อื่นๆ", "rel_none": "โปรดเลือก", "rel_athlete": "นักกีฬา", "rel_asp": "ผู้ฝึกสอน ผู้จัดการทีม หรือบุคลากรสนับสนุนนักกีฬา", "rel_tech": "ผู้ตัดสินหรือเจ้าหน้าที่เทคนิค", "rel_staff": "กรรมการ เจ้าหน้าที่ หรือเจ้าหน้าที่สำนักงานของสมาคมฯ", "rel_parent": "ผู้ปกครองของนักกีฬา", "rel_club": "ตัวแทนสมาคมสมาชิกหรือสโมสร", "rel_other": "บุคคลทั่วไป หรืออื่นๆ", "title": "แจ้งเรื่องร้องเรียนด้านความเป็นธรรมทางกีฬา", "eyebrow": "Sporting Integrity", "h1": "แจ้งเรื่องร้องเรียนด้านความเป็นธรรมทางกีฬา", "intro": "สมาคมกีฬาทางน้ำแห่งประเทศไทย เปิดช่องทางให้ผู้ที่พบเห็นหรือทราบเหตุ แจ้งการกระทำที่อาจฝ่าฝืนประมวลจริยธรรมความเป็นธรรมทางกีฬา (Integrity Code) ได้ทุกเมื่อ และสามารถแจ้งโดยไม่ระบุตัวตนได้", "emT": "กรณีมีผู้ตกอยู่ในอันตรายทันที", "emB": "โปรดแจ้งตำรวจ 191 หรือสายด่วนการแพทย์ฉุกเฉิน 1669 ก่อน แบบฟอร์มนี้ไม่ใช่ช่องทางแจ้งเหตุฉุกเฉิน", "clT": "ระบบรับเรื่องอยู่ระหว่างเตรียมเปิดใช้งาน", "clB": "ขณะนี้ยังไม่สามารถส่งแบบฟอร์มได้ ระหว่างนี้โปรดติดต่อสมาคมฯ ทางอีเมล", "bfT": "ข้อควรทราบก่อนแจ้ง", "bf0": "ทุกคนสามารถแจ้งได้ ไม่จำกัดว่าต้องเป็นนักกีฬา เจ้าหน้าที่ หรือสมาชิกของสมาคมฯ", "bf1": "เรื่องที่พิจารณาคือการกระทำที่เกี่ยวข้องกับการแข่งขันหรือกิจการของสมาคมฯ ส่วนเรื่องของ World Aquatics หรือสมาคมสมาชิก ผู้รับผิดชอบอาจเป็นหน่วยงานอื่น", "bf2": "การแจ้งโดยไม่ระบุตัวตนทำได้ ผู้พิจารณาจะไม่ทราบข้อมูลที่ระบุตัวผู้แจ้ง และจะเปิดเผยตัวตนเฉพาะเมื่อจำเป็นต่อการสอบสวนและได้รับความยินยอมเป็นหนังสือ", "bf3": "เมื่อส่งเรื่องแล้ว ระบบจะแสดงหมายเลขอ้างอิงเป็นการยืนยันการรับเรื่อง ผู้แจ้งไม่มีสิทธิ์เรียกร้องให้เปิดการพิจารณา เข้าร่วมการพิจารณา หรือรับแจ้งผลการวินิจฉัย", "bf4": "แจ้งเหตุย้อนหลังได้ไม่เกิน 10 ปีนับจากวันที่เกิดเหตุครั้งล่าสุด ยกเว้นการล่วงละเมิดทางเพศซึ่งไม่มีกำหนดอายุความ", "bf5": "โปรดแจ้งตามความจริงและโดยสุจริต การให้ข้อมูลเท็จโดยเจตนาอาจก่อให้เกิดความเสียหายแก่ผู้อื่น", "s1": "1. ประเภทของเรื่องที่แจ้ง", "s1h": "เลือกได้มากกว่า 1 ข้อ", "subsH": "ลักษณะของการกระทำ (เลือกได้มากกว่า 1 ข้อ)", "s2": "2. รายละเอียดเหตุการณ์", "fWhat": "เล่าเหตุการณ์ที่เกิดขึ้น", "fWhatH": "ระบุว่าเกิดอะไรขึ้น กับใคร ที่ไหน เมื่อไร และท่านทราบเรื่องได้อย่างไร (อย่างน้อย 20 ตัวอักษร)", "fWhen": "วันหรือช่วงเวลาที่เกิดเหตุ", "phWhen": "เช่น 15 ม.ค. 2570 หรือ ช่วงต้นปี 2569", "fEvent": "รายการแข่งขันหรืองานที่เกี่ยวข้อง (ถ้ามี)", "fPlace": "สถานที่ (ถ้ามี)", "fMinor": "มีผู้เยาว์ (อายุต่ำกว่า 18 ปี) เกี่ยวข้องหรือได้รับผลกระทบหรือไม่", "fMinorH": "หากมีผู้เยาว์ โปรดระบุรายละเอียดเท่าที่จำเป็น", "yes": "มี", "no": "ไม่มี", "unsure": "ไม่แน่ใจ", "fDanger": "ขณะนี้มีผู้ได้รับอันตรายหรือเสี่ยงต่ออันตราย (เพื่อให้พิจารณาก่อน)", "s3": "3. ผู้ที่เกี่ยวข้องและหลักฐาน", "fSubj": "ชื่อ ตำแหน่ง หรือหน่วยงานของผู้ถูกกล่าวถึง (ถ้าทราบ)", "fSubjRole": "สถานะของผู้ถูกกล่าวถึง", "fEvid": "หลักฐานที่มี (ถ้ามี)", "phEvid": "เช่น ภาพถ่าย ข้อความ เอกสาร พยานบุคคล", "fLinks": "ลิงก์หลักฐาน (ถ้ามี)", "fLinksH": "ขณะนี้ยังไม่รับอัปโหลดไฟล์ ผู้พิจารณาอาจติดต่อขอหลักฐานเพิ่มเติม", "s4": "4. ข้อมูลผู้แจ้ง", "anon": "แจ้งโดยไม่ระบุตัวตน", "anonH": "ไม่ต้องกรอกชื่อหรือช่องทางติดต่อ และผู้พิจารณาจะไม่สามารถติดต่อกลับได้", "ident": "แจ้งโดยระบุตัวตน", "identH": "ผู้พิจารณาอาจติดต่อเพื่อสอบถามข้อมูลเพิ่มเติม", "fName": "ชื่อ-นามสกุล", "fRel": "ความสัมพันธ์กับเรื่องที่แจ้ง", "fContact": "อีเมลหรือหมายเลขโทรศัพท์", "fDisc": "ยินยอมให้เปิดเผยตัวตนของข้าพเจ้า เฉพาะเมื่อจำเป็นต่อการสอบสวน (ไม่บังคับ)", "s5": "5. การยืนยัน", "cTruth": "ข้าพเจ้ายืนยันว่าข้อมูลที่แจ้งเป็นความจริงตามความเข้าใจของข้าพเจ้า และแจ้งโดยสุจริต", "cPriv": "ข้าพเจ้ารับทราบว่าข้อมูลที่แจ้งจะถูกจัดเก็บและใช้เพื่อพิจารณาเรื่องตามประมวลจริยธรรมความเป็นธรรมทางกีฬาของสมาคมฯ เท่านั้น และอาจส่งต่อให้หน่วยงานที่มีอำนาจเมื่อกฎหมายหรือประมวลฯ กำหนด", "submit": "ส่งเรื่อง", "sending": "กำลังส่ง…", "errH": "โปรดตรวจสอบข้อมูลต่อไปนี้", "eCat": "เลือกประเภทของเรื่องอย่างน้อย 1 ข้อ", "eDesc": "เล่าเหตุการณ์อย่างน้อย 20 ตัวอักษร", "eMode": "เลือกว่าจะแจ้งโดยไม่ระบุตัวตนหรือระบุตัวตน", "eName": "กรอกชื่อ-นามสกุล", "eContact": "กรอกอีเมลหรือหมายเลขโทรศัพท์", "eConf": "กรุณาทำเครื่องหมายยืนยันทั้งสองข้อ", "eNet": "ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง หากยังไม่สำเร็จโปรดติดต่อสมาคมฯ ทางอีเมล", "okT": "สมาคมฯ ได้รับเรื่องของท่านแล้ว", "okB": "โปรดจดหรือคัดลอกหมายเลขอ้างอิงนี้ไว้ ระบบไม่สามารถเรียกดูเรื่องย้อนหลังได้", "okR": "หมายเลขอ้างอิง", "copy": "คัดลอก", "copied": "คัดลอกแล้ว", "again": "ส่งเรื่องใหม่", "orgname": "สมาคมกีฬาทางน้ำแห่งประเทศไทย", "orgsub": "Thailand Aquatic Sports Association : TASA", "orgdept": "ฝ่ายกิจการต่างประเทศ", "ftorg": "สำนักงานเลขาธิการ สมาคมกีฬาทางน้ำแห่งประเทศไทย", "addr": "ชั้น 21 อาคารเฉลิมพระเกียรติ 7 รอบ พระชนมพรรษา<br>เลขที่ 286 การกีฬาแห่งประเทศไทย ถนนรามคำแหง<br>แขวงหัวหมาก เขตบางกะปิ กรุงเทพมหานคร 10240", "ftdept": "ข้อมูลเพื่อการประสานงาน ฝ่ายกิจการต่างประเทศ (Foreign Affairs Department)", "ftmail": "อีเมล:", "logoalt": "โลโก้สมาคมกีฬาทางน้ำแห่งประเทศไทย"}, "en": {"cat_manip": "Match-fixing or manipulation of competitions", "cat_bet": "Betting on aquatics, or relationships with betting organisations", "cat_bribe": "Bribery, gifts, hospitality or other improper benefits", "cat_inside": "Misuse or disclosure of inside information", "cat_coi": "Conflict of interest", "cat_fraud": "Falsification of documents or information, or misuse of funds", "cat_harass": "Harassment, abuse or conduct harmful to athletes or others", "cat_disc": "Discrimination, or offensive, violent or disrespectful behaviour", "cat_interf": "Interference with events, meetings or the field of play", "cat_gov": "Irregularities in elections or bids to host events", "cat_other": "Other sporting integrity matter", "sub_hazing": "Hazing", "sub_neglect": "Neglect", "sub_psych": "Psychological abuse", "sub_phys": "Physical abuse", "sub_sexh": "Sexual harassment", "sub_sexa": "Sexual abuse", "subj_none": "Unknown or not specified", "subj_athlete": "Athlete", "subj_asp": "Coach, manager or other athlete support personnel", "subj_tech": "Referee or technical official", "subj_tasa": "TASA official, committee member or staff", "subj_club": "Member association or club", "subj_org": "Event organiser", "subj_other": "Other", "rel_none": "Please select", "rel_athlete": "Athlete", "rel_asp": "Coach, manager or athlete support personnel", "rel_tech": "Referee or technical official", "rel_staff": "TASA official, committee member or staff", "rel_parent": "Parent or guardian of an athlete", "rel_club": "Member association or club representative", "rel_other": "Member of the public, or other", "title": "Report a Sporting Integrity Concern", "eyebrow": "Sporting Integrity", "h1": "Report a sporting integrity concern", "intro": "The Thailand Aquatic Sports Association provides this channel for anyone who has seen or knows of conduct that may breach the Integrity Code. Reports may be made anonymously.", "emT": "If someone is in immediate danger", "emB": "Please call the police (191) or emergency medical services (1669) first. This form is not an emergency channel.", "clT": "The reporting system is being prepared", "clB": "The form cannot be submitted yet. In the meantime, please contact the association by email:", "bfT": "Before you report", "bf0": "Anyone may report. You do not need to be an athlete, official or member of the association.", "bf1": "Matters considered are those connected with the association’s competitions or affairs. Matters concerning World Aquatics or member associations may be for another body to handle.", "bf2": "You may report anonymously. The reviewer will not know information that identifies you, and your identity will be disclosed only if necessary for the investigation and with your written consent.", "bf3": "After submitting, a reference number is shown as acknowledgement of receipt. A reporter has no entitlement to have proceedings opened, to take part in them, or to be informed of any decision.", "bf4": "Conduct may be reported up to 10 years after the date it last occurred, except sexual abuse, which has no time limit.", "bf5": "Please report truthfully and in good faith. Knowingly false information can harm other people.", "s1": "1. Type of concern", "s1h": "Select all that apply", "subsH": "Nature of the conduct (select all that apply)", "s2": "2. What happened", "fWhat": "Describe what happened", "fWhatH": "Say what happened, to whom, where and when, and how you know (at least 20 characters)", "fWhen": "Date or period", "phWhen": "e.g. 15 Jan 2027, or early 2026", "fEvent": "Related competition or event (if any)", "fPlace": "Place (if any)", "fMinor": "Is a minor (under 18) involved or affected?", "fMinorH": "If so, please give only the details that are necessary", "yes": "Yes", "no": "No", "unsure": "Not sure", "fDanger": "Someone is currently harmed or at risk (so it can be reviewed first)", "s3": "3. People involved and evidence", "fSubj": "Name, position or organisation of the person concerned (if known)", "fSubjRole": "Role of the person concerned", "fEvid": "Evidence you have (if any)", "phEvid": "e.g. photos, messages, documents, witnesses", "fLinks": "Link to evidence (if any)", "fLinksH": "File uploads are not accepted yet. The reviewer may ask for more evidence.", "s4": "4. About you", "anon": "Report anonymously", "anonH": "No name or contact details needed. The reviewer will not be able to contact you.", "ident": "Report with my details", "identH": "The reviewer may contact you for more information.", "fName": "Full name", "fRel": "Your connection to the matter", "fContact": "Email or phone number", "fDisc": "I consent to my identity being disclosed only where necessary for the investigation (optional)", "s5": "5. Confirmation", "cTruth": "I confirm the information is true to the best of my knowledge and given in good faith", "cPriv": "I understand the information will be stored and used only to consider the matter under the association’s Integrity Code, and may be passed to competent authorities where the law or the Code requires", "submit": "Submit report", "sending": "Sending…", "errH": "Please check the following", "eCat": "Select at least one type of concern", "eDesc": "Describe what happened (at least 20 characters)", "eMode": "Choose whether to report anonymously or with your details", "eName": "Enter your full name", "eContact": "Enter an email or phone number", "eConf": "Please tick both confirmations", "eNet": "The report could not be sent. Please try again, or contact the association by email:", "okT": "We have received your report", "okB": "Please note or copy this reference number. Reports cannot be looked up later.", "okR": "Reference number", "copy": "Copy", "copied": "Copied", "again": "Submit another report", "orgname": "Thailand Aquatic Sports Association : TASA", "orgsub": "", "orgdept": "Foreign Affairs Department", "ftorg": "Secretariat, Thailand Aquatic Sports Association", "addr": "Floor 21, 7th Cycle Birthday Anniversary Commemoration Building<br>286 Sports Authority of Thailand, Ramkhamhaeng Road<br>Hua Mak, Bang Kapi, Bangkok 10240", "ftdept": "Information for coordination, Foreign Affairs Department", "ftmail": "Email:", "logoalt": "Thailand Aquatic Sports Association logo"}};
+var NAV={"th": [["./home.html", "หน้าแรก"], ["./", "ปฏิทินการแข่งขัน"], ["./about.html", "เกี่ยวกับฝ่ายฯ"], ["./report.html", "แจ้งเรื่องร้องเรียน", 1], ["#contact", "ติดต่อ"]], "en": [["./home.html", "Home"], ["./", "Competition Calendar"], ["./about.html", "About"], ["./report.html", "Report a Concern", 1], ["#contact", "Contact"]]};
+var started=Date.now();
+function tt(k){return T[lang][k]||T.th[k]||'';}
+function thLabel(k){return T.th[k]||'';}
+
+function render(){
+  document.documentElement.lang=lang;document.title=tt('title');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-t]'),function(n){var v=tt(n.getAttribute('data-t'));if(n.id==='ftaddr')n.innerHTML=v;else n.textContent=v;});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-ph]'),function(n){n.placeholder=tt(n.getAttribute('data-ph'));});
+  $('orgname').textContent=tt('orgname');$('orgsub').textContent=lang==='th'?tt('orgsub'):'';$('orgdept').textContent=tt('orgdept');
+  $('ftorg').textContent=tt('ftorg');$('ftaddr').innerHTML=tt('addr');$('ftdept').textContent=tt('ftdept');$('ftmaillbl').textContent=tt('ftmail');$('ftcopy').textContent=tt('copy');
+  document.querySelector('.logo-img').alt=tt('logoalt');
+  $('nav').innerHTML=NAV[lang].map(function(n){return '<a href="'+n[0]+'"'+(n[2]?' aria-current="page"':'')+'>'+esc(n[1])+'</a>';}).join('');
+  Array.prototype.forEach.call(document.querySelectorAll('.lb'),function(b){b.setAttribute('aria-pressed',b.dataset.l===lang?'true':'false');});
+  $('closedbox').hidden=!!ENDPOINT;
+  if(!ENDPOINT){$('submit').disabled=true;}
+}
+document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('.lb');if(b){lang=b.dataset.l;try{localStorage.setItem('tasa-lang',lang);}catch(e){}render();if(!$('errs').hidden)validate(false);}});
+$('ftcopy').addEventListener('click',function(){var m=FALLBACK_EMAIL;function done(){$('ftcopy').textContent=tt('copied');setTimeout(function(){$('ftcopy').textContent=tt('copy');},1500);}try{navigator.clipboard.writeText(m).then(done,function(){});}catch(e){}});
+
+/* show the sub-types only when "harassment / abuse" is ticked */
+function syncSubs(){var on=document.querySelector('input[name=cat][value=harass]').checked;$('subs').hidden=!on;if(!on)Array.prototype.forEach.call(document.querySelectorAll('input[name=hsub]'),function(i){i.checked=false;});}
+document.addEventListener('change',function(ev){
+  if(ev.target.name==='cat')syncSubs();
+  if(ev.target.name==='mode')$('idbox').hidden=ev.target.value!=='ident';
+});
+
+function vals(name){return Array.prototype.map.call(document.querySelectorAll('input[name='+name+']:checked'),function(i){return i.value;});}
+function mode(){var m=document.querySelector('input[name=mode]:checked');return m?m.value:'';}
+function validate(focus){
+  var errs=[],first=null;
+  function bad(msg,el){errs.push(msg);if(!first)first=el;}
+  if(!vals('cat').length)bad(tt('eCat'),document.querySelector('input[name=cat]'));
+  if($('desc').value.trim().length<20)bad(tt('eDesc'),$('desc'));
+  if(!mode())bad(tt('eMode'),document.querySelector('input[name=mode]'));
+  if(mode()==='ident'){if(!$('rname').value.trim())bad(tt('eName'),$('rname'));if(!$('rcontact').value.trim())bad(tt('eContact'),$('rcontact'));}
+  if(!$('ctruth').checked||!$('cpriv').checked)bad(tt('eConf'),$('ctruth'));
+  var box=$('errs');
+  if(errs.length){box.innerHTML='<b>'+esc(tt('errH'))+'</b><ul>'+errs.map(function(e){return '<li>'+esc(e)+'</li>';}).join('')+'</ul>';box.hidden=false;if(focus){box.focus();box.scrollIntoView({block:'center'});}}
+  else box.hidden=true;
+  return !errs.length;
+}
+
+function payload(){
+  var anon=mode()==='anon';
+  return {
+    lang:lang,
+    anonymous:anon?'ใช่':'ไม่',
+    categories:vals('cat').map(function(k){return thLabel('cat_'+k);}),
+    subtypes:vals('hsub').map(function(k){return thLabel('sub_'+k);}),
+    description:$('desc').value.trim(),
+    when:$('when').value.trim(),event:$('event').value.trim(),place:$('place').value.trim(),
+    minor:(document.querySelector('input[name=minor]:checked')||{}).value||'',
+    danger:$('danger').checked?'ใช่':'',
+    subject:$('subj').value.trim(),
+    subjectRole:$('subjrole').value?thLabel('subj_'+$('subjrole').value):'',
+    evidence:$('evid').value.trim(),links:$('links').value.trim(),
+    reporterName:anon?'':$('rname').value.trim(),
+    reporterRole:anon||!$('rrel').value?'':thLabel('rel_'+$('rrel').value),
+    reporterContact:anon?'':$('rcontact').value.trim(),
+    consentDisclose:(!anon&&$('rdisc').checked)?'ยินยอม':'',
+    consentTruth:$('ctruth').checked,consentPrivacy:$('cpriv').checked,
+    website:$('website').value,elapsedMs:Date.now()-started
+  };
+}
+
+$('f').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  if(!ENDPOINT||!validate(true))return;
+  var btn=$('submit');btn.disabled=true;btn.textContent=tt('sending');$('status').textContent='';
+  /* text/plain keeps this a "simple" request, so no CORS pre-flight is needed for Apps Script */
+  fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload())})
+   .then(function(r){return r.json();})
+   .then(function(j){
+     if(!j||!j.ok)throw new Error('rejected');
+     $('refno').textContent=j.ref||'';$('f').hidden=true;$('done').hidden=false;$('done').focus();$('done').scrollIntoView({block:'start'});
+   })
+   .catch(function(){
+     var box=$('errs');box.innerHTML=esc(tt('eNet'))+' <a href="mailto:'+FALLBACK_EMAIL+'">'+FALLBACK_EMAIL+'</a>';box.hidden=false;box.focus();
+   })
+   .then(function(){btn.disabled=!ENDPOINT;btn.textContent=tt('submit');});
+});
+$('copyref').addEventListener('click',function(){try{navigator.clipboard.writeText($('refno').textContent).then(function(){$('copyref').textContent=tt('copied');setTimeout(function(){$('copyref').textContent=tt('copy');},1500);},function(){});}catch(e){}});
+$('again').addEventListener('click',function(){$('f').reset();syncSubs();$('idbox').hidden=true;$('done').hidden=true;$('f').hidden=false;started=Date.now();window.scrollTo({top:0});});
+
+render();
+})();
+</script>
+</body>
+</html>
