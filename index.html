@@ -1,0 +1,521 @@
+<title>ปฏิทินกีฬาทางน้ำนานาชาติ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one month grid at a time, multi-day bars across week rows, floating detail card on hover/focus/tap.
+   Data lives in #events-data (JSON) so scheduled updates only touch that block. */
+:root{
+  --bg:#f3f6fa; --card:#ffffff; --ink:#1f2d3d; --muted:#64748b; --line:#e2e8f0; --primary:#17406b; --accent:#2b6cb0;
+  --wk:#fff5f5; --wk-ink:#c53030; --out:#b8c2cf; --hover:#f8fafc; --pop:#ffffff; --pop-line:#cbd5e1; --note:#eaf3fb; --warn:#b45309; --warn-bg:#fff7e6;
+  --swim:#1d4ed8; --polo:#15803d; --dive:#c2410c; --art:#9333ea; --open:#0e7490; --mas:#be185d;
+  --font:'Noto Sans Thai','TH Sarabun New',Tahoma,sans-serif;
+  --hd-a:#1a365d; --hd-b:#2a4365; --hd-sub:#90cdf4; --ft-bg:#1a202c; --ft-ink:#a0aec0; --ft-line:#2d3748; --ft-top:#3182ce;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1621; --card:#152233; --ink:#e6edf5; --muted:#93a3b8; --line:#26364a; --primary:#9cc4ee; --accent:#6aa9e6;
+  --wk:#2a1d22; --wk-ink:#f08a8a; --out:#4a596d; --hover:#1a2a3f; --pop:#1b2d44; --pop-line:#3a4f69; --note:#16293f; --warn:#f6ad55; --warn-bg:#2d2414;
+  --swim:#3b6ff0; --polo:#1f9d55; --dive:#e0622a; --art:#a855f7; --open:#1798b8; --mas:#db2777; --hd-a:#0f2a47; --hd-b:#17406b; --hd-sub:#9cc4ee; --ft-bg:#0a1019; --ft-ink:#93a3b8; --ft-line:#1f2d40; --ft-top:#2b6cb0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1621; --card:#152233; --ink:#e6edf5; --muted:#93a3b8; --line:#26364a; --primary:#9cc4ee; --accent:#6aa9e6;
+  --wk:#2a1d22; --wk-ink:#f08a8a; --out:#4a596d; --hover:#1a2a3f; --pop:#1b2d44; --pop-line:#3a4f69; --note:#16293f; --warn:#f6ad55; --warn-bg:#2d2414;
+  --swim:#3b6ff0; --polo:#1f9d55; --dive:#e0622a; --art:#a855f7; --open:#1798b8; --mas:#db2777; --hd-a:#0f2a47; --hd-b:#17406b; --hd-sub:#9cc4ee; --ft-bg:#0a1019; --ft-ink:#93a3b8; --ft-line:#1f2d40; --ft-top:#2b6cb0; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;display:flex;flex-direction:column;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:101;background:var(--hd-a)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.app-header{position:relative;z-index:1;background:linear-gradient(135deg,var(--hd-a) 0%,var(--hd-b) 100%);color:#fff;padding-block:18px;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+.hd-in,.ft-in{max-width:1180px;margin:0 auto}
+.hd-in{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px 16px}
+.logo-area{display:flex;align-items:center;gap:14px;min-width:0}
+.logo-icon{flex:none;width:48px;height:48px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.hd-text{display:flex;flex-direction:column;min-width:0}
+.org-name{font-size:24px;font-weight:700;letter-spacing:.3px;color:#fff;line-height:1.3}
+.org-dept{margin-top:4px;font-size:16px;font-weight:600;color:#fff;line-height:1.3}
+.org-sub{font-size:14px;font-weight:500;color:var(--hd-sub);text-transform:uppercase;letter-spacing:1px}
+.mascot-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:500;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff}
+.wrap{flex:1;padding-block:28px 40px}
+.app-footer{margin-top:auto;background:var(--ft-bg);color:var(--ft-ink);border-top:4px solid var(--ft-top);padding-block:28px}
+.ft-in{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+.ft-info strong{display:block;color:#fff;font-size:16px;margin-bottom:2px}
+.ft-copy{width:100%;max-width:600px;border-top:1px solid var(--ft-line);padding-top:14px;font-size:13px}
+main{max-width:1180px;margin:0 auto;background:var(--card);border-radius:16px;padding:32px;border:1px solid var(--line)}
+.hero{text-align:center;margin-bottom:18px}
+h1{font-size:30px;font-weight:700;margin:0 0 6px;color:var(--primary);text-wrap:balance}
+.sub{margin:0;color:var(--muted);font-size:14px}
+.sub b{color:var(--ink);font-weight:600}
+.controls{display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px 0 20px;border-bottom:1px dashed var(--line);margin-bottom:20px}
+.nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+button,select{font-family:var(--font);font-size:14px;font-weight:600;color:var(--primary);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 14px;cursor:pointer}
+button:hover:not(:disabled){background:var(--accent);color:#fff;border-color:var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,select:focus-visible,.ev:focus-visible,.chip:focus-visible,.lg:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.filters{display:flex;flex-wrap:wrap;gap:8px 10px;justify-content:center}
+.lg{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:500;cursor:pointer;user-select:none;font-family:var(--font);font-size:14px}
+.lg i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.lg[aria-pressed="false"]{opacity:.45;text-decoration:line-through}
+.lg.tier{font-weight:600}
+.month{display:none;border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.month.on{display:block}
+.month h2{margin:0 0 12px;font-size:22px;font-weight:600;color:var(--primary);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.month h2 small{font-size:15px;color:var(--muted);font-weight:400}
+.dow,.days,.evs{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.dow div{text-align:center;font-weight:600;color:var(--muted);padding-bottom:8px;font-size:13px}
+.week{border-top:1px solid var(--line);padding:4px 0 7px}
+.day{padding:3px;min-height:28px}
+.day span{display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;border-radius:50%;font-weight:500}
+.day.out span{color:var(--out)}
+.day.we span{color:var(--wk-ink);background:var(--wk)}
+.day.out.we span{background:transparent}
+.evs{gap:3px 0;padding:0 2px;margin-top:2px}
+.ev{font-size:12px;line-height:1.45;padding:3px 8px;margin:0 2px;border-radius:6px;color:#fff;font-weight:500;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:pointer;transition:filter .15s,opacity .15s}
+.ev b,.chip b{background:rgba(255,255,255,.25);padding:0 5px;border-radius:4px;margin-right:5px;font-weight:700}
+.ev.cs{border-top-left-radius:0;border-bottom-left-radius:0;margin-left:0}
+.ev.ce{border-top-right-radius:0;border-bottom-right-radius:0;margin-right:0}
+.ev.tbc{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.18) 0 6px,transparent 6px 12px)}
+.ev.hl{filter:brightness(1.2) saturate(1.1);box-shadow:0 0 0 2px var(--ink) inset}
+.ev.dim,.chip.dim{opacity:.12;pointer-events:none}
+.chips{display:flex;flex-direction:column;gap:6px;margin-top:14px;align-items:flex-start}
+.chips h3{margin:0;font-size:13px;color:var(--muted);font-weight:600}
+.chip{font-size:13px;padding:3px 12px;border-radius:999px;color:#fff;font-weight:500;cursor:pointer;border:0;font-family:var(--font);text-align:left}
+.empty{color:var(--muted);margin:14px 0 0;font-size:13px}
+.pop{position:fixed;z-index:50;width:min(340px,calc(100vw - 24px));background:var(--pop);color:var(--ink);border:1px solid var(--pop-line);border-radius:12px;padding:0;box-shadow:0 12px 32px rgba(0,0,0,.22);pointer-events:none;overflow:hidden;font-size:13px}
+.pop[hidden]{display:none!important}
+.pop.pin{pointer-events:auto}
+.pop .top{padding:10px 14px;color:#fff}
+.pop .top .k{font-size:12px;opacity:.9;font-weight:500}
+.pop .top .t{font-size:16px;font-weight:700;line-height:1.35}
+.pop dl{margin:0;padding:10px 14px 12px;display:grid;grid-template-columns:78px minmax(0,1fr);gap:5px 10px}
+.pop dt{color:var(--muted)}
+.pop dd{margin:0;overflow-wrap:anywhere}
+.pop dd.na{color:var(--muted);font-style:italic}
+.pop .st{display:inline-block;padding:0 8px;border-radius:999px;font-size:12px;font-weight:600;background:var(--note);color:var(--accent)}
+.pop .st.w{background:var(--warn-bg);color:var(--warn)}
+.pop a{color:var(--accent)}
+.pop .x{position:absolute;right:6px;top:6px;padding:0 8px;line-height:24px;background:rgba(0,0,0,.25);color:#fff;border:0;border-radius:6px;display:none}
+.pop.pin .x{display:block}
+.note{margin-top:24px;border-left:4px solid var(--accent);background:var(--note);border-radius:0 10px 10px 0;padding:16px 20px;color:var(--ink)}
+.note h3{margin:0 0 6px;font-size:15px;color:var(--primary)}
+.note ul{margin:0;padding-left:20px}
+.note li{margin-bottom:4px}
+.log li{color:var(--muted)}
+.log li b{color:var(--ink)}
+.views{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.views button{border:0;border-radius:0;background:var(--card)}
+.views button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.list{display:none;flex-direction:column;gap:8px}
+body.vl .list{display:flex}
+body.vl .dow,body.vl .week{display:none}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;text-align:left;width:100%;font-family:var(--font);font-size:14px;font-weight:500;color:var(--ink);background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:10px;padding:10px 12px;cursor:pointer}
+.item:hover:not(:disabled){background:var(--hover);color:var(--ink);border-color:var(--line);border-left-color:var(--c)}
+.item .n{font-weight:600;grid-column:1}
+.item .tg{grid-column:2;grid-row:1;align-self:start;font-size:12px;font-weight:700;color:#fff;background:var(--c);border-radius:6px;padding:0 7px}
+.item .m{grid-column:1/3;color:var(--muted);font-weight:400;font-size:13px}
+.item .m .w{color:var(--warn);font-weight:600}
+.item.dim{opacity:.12;pointer-events:none}
+.list .none{margin:0;color:var(--muted)}
+@media (max-width:640px){.org-name{font-size:19px}.logo-img{height:84px}.hd-in{flex-direction:column;text-align:center}.logo-area{flex-direction:column;gap:8px}.wrap{padding-block:16px 28px}main{padding:16px 12px}h1{font-size:23px}.ev{font-size:10.5px;padding:2px 4px}.ev b{display:none}.month{padding:10px 8px}.day span{width:22px;height:22px;font-size:12px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{.app-header{position:static;background:#fff;color:#000;box-shadow:none;border-bottom:2px solid #1a365d}.org-name{color:#000}.org-sub{color:#555}.mascot-badge{color:#333;background:#f5f5f5;border-color:#ccc}.app-footer{background:#fff;color:#333;border-top:1px solid #ccc}.ft-info strong{color:#000}body::before{display:none}body{background:#fff;padding:0}main{border:0;padding:0}.controls,.note,.pop{display:none}.month{display:block!important;page-break-after:always}.ev.dim,.chip.dim{opacity:1}@page{size:A4 landscape;margin:10mm}}
+
+.lang{display:inline-flex;border:1px solid rgba(255,255,255,.4);border-radius:999px;overflow:hidden}
+.lang button{border:0;border-radius:0;background:transparent;color:#fff;padding:5px 12px;font-size:13px}
+.lang button[aria-pressed="true"]{background:#fff;color:var(--hd-a)}
+.lang button:hover:not(:disabled){background:rgba(255,255,255,.25);color:#fff;border-color:transparent}
+.lang button[aria-pressed="true"]:hover:not(:disabled){background:#fff;color:var(--hd-a)}
+.minibar{position:fixed;top:0;left:0;right:0;z-index:100;padding-top:env(safe-area-inset-top,0px);background:linear-gradient(135deg,var(--hd-a) 0%,var(--hd-b) 100%);color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.2);transform:translateY(-110%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s}
+.minibar.show{transform:translateY(0);visibility:visible;transition:transform .25s ease,visibility 0s}
+.mb-in{max-width:1180px;margin:0 auto;height:52px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mb-l{display:flex;align-items:center;gap:10px;min-width:0}
+.mb-l img{height:38px;width:auto;flex:none;display:block}
+.mb-name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.minibar .lang{flex:none}
+.minibar .lang button{padding:3px 10px;font-size:12px}
+@media print{.minibar{display:none}}
+@media (prefers-reduced-motion:reduce){.minibar{transition:none}}
+.hd-right{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end}
+.logo-img{flex:none;height:96px;width:auto;display:block}
+.ft-logo{height:110px;width:auto;display:block}
+.ft-mail{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:6px}
+.ft-mail a{color:#fff}
+.ft-mail button{font-size:12px;padding:2px 10px;background:transparent;color:#fff;border:1px solid var(--ft-line);border-radius:6px}
+.ft-mail button:hover:not(:disabled){background:var(--accent);color:#fff}
+.tiers{margin-top:24px;border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+.tiers h3{margin:0 0 4px;font-size:15px;color:var(--primary)}
+.tiers p{margin:0 0 10px;color:var(--muted);font-size:13px}
+.tiers ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.tiers li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start}
+.tiers .tg{font-weight:700;font-size:12px;background:var(--primary);color:var(--card);border-radius:6px;padding:1px 8px;white-space:nowrap}
+.pop .tiernote{color:var(--muted)}
+@media (max-width:640px){.hd-right{justify-content:center}}
+.sponsors{max-width:1180px;margin:20px auto 0;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 24px 22px}
+.sponsors h3{margin:0 0 14px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center}
+.sp-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.sp-list li{display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:12px;height:84px;padding:10px 14px}
+.sp-list img{display:block;max-height:100%;max-width:100%;width:auto;height:auto;object-fit:contain}
+.ft-main{display:flex;align-items:center;gap:24px;text-align:left;width:100%;max-width:900px}
+.ft-main .ft-logo{flex:none}
+.ft-info{min-width:0}
+.ft-info strong{font-size:18px;line-height:1.4}
+.ft-info .ft-en{display:block;color:#fff;font-size:16px;margin-bottom:6px}
+.ft-info .ft-dept{display:block;margin-bottom:6px}
+.ft-info address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
+@media (max-width:900px){.sp-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.ft-main{flex-direction:column;text-align:center}.sponsors{padding:14px 12px 16px}.sp-list li{height:72px}}
+</style>
+
+<div class="minibar" id="minibar">
+  <div class="mb-in gut">
+    <div class="mb-l"><img src="assets/tasa-logo.png" alt="" height="38"><span class="mb-name" id="mbname"></span></div>
+    <div class="lang" role="group" aria-label="Language"><button type="button" class="lb" data-l="th" aria-pressed="true">TH</button><button type="button" class="lb" data-l="en" aria-pressed="false">EN</button></div>
+  </div>
+</div>
+<header class="app-header" id="apphd">
+  <div class="hd-in gut">
+    <div class="logo-area">
+      <img class="logo-img" src="assets/tasa-logo.png" alt="โลโก้ TASA" height="96">
+      <div class="hd-text">
+        <div class="org-name" id="orgname"></div>
+        <div class="org-sub" id="orgsub"></div>
+        <div class="org-dept" id="orgdept"></div>
+      </div>
+    </div>
+    <div class="hd-right">
+      <div class="lang" role="group" aria-label="Language"><button type="button" id="lth" class="lb" data-l="th" aria-pressed="true">TH</button><button type="button" id="len" class="lb" data-l="en" aria-pressed="false">EN</button></div>
+    </div>
+  </div>
+</header>
+<div class="wrap gut">
+<main>
+<div class="hero">
+  <h1 id="h1"></h1>
+  <p class="sub" id="subline"></p>
+</div>
+<div class="controls">
+  <div class="nav">
+    <button id="prev" type="button"></button>
+    <select id="msel"></select>
+    <button id="next" type="button"></button>
+  </div>
+  <div class="filters" id="sportf" role="group"></div>
+  <div class="filters" id="tierf" role="group"></div>
+  <div class="views" role="group" aria-label="Year"><button type="button" id="y0" aria-pressed="true"></button><button type="button" id="y1" aria-pressed="false"></button></div>
+  <div class="views" role="group"><button type="button" id="vc" aria-pressed="true"></button><button type="button" id="vl" aria-pressed="false"></button></div>
+</div>
+<div id="cal"></div>
+<div class="tiers" id="tiers"></div>
+<div class="note" id="notes"></div>
+<div class="note log" id="logbox" hidden>
+  <h3 id="logh"></h3>
+  <ul id="log"></ul>
+</div>
+</main>
+<section class="sponsors" aria-labelledby="sph">
+  <h3 id="sph"></h3>
+  <ul class="sp-list">
+    <li><img src="assets/sponsors/sat.png" alt="Sports Authority of Thailand (SAT)" height="56"></li>
+    <li><img src="assets/sponsors/nsdf.png" alt="National Sports Development Fund (NSDF)" height="56"></li>
+    <li><img src="assets/sponsors/ptt.png" alt="PTT" height="56"></li>
+    <li><img src="assets/sponsors/thaioil.png" alt="Thaioil" height="56"></li>
+    <li><img src="assets/sponsors/gc.png" alt="GC" height="56"></li>
+    <li><img src="assets/sponsors/grandsport.png" alt="Grand Sport" height="56"></li>
+  </ul>
+</section>
+</div>
+<footer class="app-footer">
+  <div class="ft-in gut">
+    <div class="ft-main">
+      <img class="ft-logo" src="assets/tasa-logo.png" alt="" height="110">
+      <div class="ft-info">
+        <strong id="ftorg"></strong>
+        <span class="ft-en">Thailand Aquatic Sports Association (TASA)</span>
+        <span id="ftdept" class="ft-dept"></span>
+        <address id="ftaddr"></address>
+        <div class="ft-mail"><span id="ftmaillbl"></span><a href="mailto:thaitaa@thaiaquatics.or.th" id="ftmail">thaitaa@thaiaquatics.or.th</a><button type="button" id="ftcopy"></button></div>
+      </div>
+    </div>
+    <div class="ft-copy">&copy; 2026 Thailand Aquatic Sports Association : TASA. All rights reserved.</div>
+  </div>
+</footer>
+<div class="pop" id="pop" hidden role="dialog" aria-live="polite"></div>
+
+<script type="application/json" id="events-data">
+{"updated":"2026-10-22","changelog":[{"date": "2026-10-22", "text": "เพิ่มการแข่งขันกีฬาทางน้ำมาสเตอร์ (Masters) ชิงแชมป์โลก บูดาเปสต์ 26 มิ.ย.–17 ก.ค. 2570 และเปลี่ยนชื่อหน้าเป็นรายการนานาชาติ", "text_en": "Added Masters aquatics: World Aquatics Masters Championships, Budapest, 26 Jun–17 Jul 2027. Page retitled as an international calendar."}, {"date": "2026-10-22", "text": "ขยายปฏิทินถึง พ.ศ. 2571 (ค.ศ. 2028) เพิ่มโอลิมปิกเกมส์ ลอสแอนเจลิส 2028 และรายการว่ายน้ำลีลา ปรับรายการชิงแชมป์โลกเยาวชนว่ายน้ำลีลา 2570 เป็นแคลการี 18–22 ส.ค. และเติมข้อมูลติดต่อ World Aquatics", "text_en": "Calendar extended to 2028 (B.E. 2571): added the Los Angeles 2028 Olympic Games and artistic swimming events, set the 2027 Youth Artistic Swimming Championships to Calgary 18–22 Aug, and added World Aquatics contact details."}, {"date": "2026-10-22", "text": "จัดทำปฏิทินฉบับแรก 30 รายการ", "text_en": "First edition of the calendar with 30 events."}],"events":[
+{"id": "wp-wc-div12-m", "sport": "polo", "tier": 2, "name": "World Cup Div 1–2 ชาย", "city": "อิสตันบูล", "country": "ตุรกี", "start": "2027-01-11", "end": "2027-01-24", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Water Polo World Cup Div 1–2 (Men)", "city_en": "Istanbul", "country_en": "Türkiye", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "sw-sgp-1", "sport": "swim", "tier": 4, "name": "Singapore Swim Series", "city": "สิงคโปร์", "country": "สิงคโปร์", "start": "2027-01-15", "end": "2027-01-17", "status": "confirmed", "name_en": "Singapore Swim Series", "city_en": "Singapore", "country_en": "Singapore"},
+{"id": "dv-gb", "sport": "dive", "tier": 4, "name": "Aquatics GB Diving International", "city": "เชฟฟีลด์", "country": "สหราชอาณาจักร", "start": "2027-02-04", "end": "2027-02-07", "status": "confirmed", "organizer": "Aquatics GB", "name_en": "Aquatics GB Diving International", "city_en": "Sheffield", "country_en": "United Kingdom"},
+{"id": "sw-sgp-2", "sport": "swim", "tier": 4, "name": "Singapore Swim Series", "city": "สิงคโปร์", "country": "สิงคโปร์", "start": "2027-02-19", "end": "2027-02-21", "status": "confirmed", "name_en": "Singapore Swim Series", "city_en": "Singapore", "country_en": "Singapore"},
+{"id": "wp-wc-final", "sport": "polo", "tier": 2, "name": "World Cup รอบชิงชนะเลิศ", "city": "เอเธนส์", "country": "กรีซ", "start": "2027-02-24", "end": "2027-02-28", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Water Polo World Cup Final", "city_en": "Athens", "country_en": "Greece", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "dv-wc1", "sport": "dive", "tier": 2, "name": "Diving World Cup #1", "city": "มอนทรีออล", "country": "แคนาดา", "start": "2027-02-25", "end": "2027-02-28", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Diving World Cup #1", "city_en": "Montreal", "country_en": "Canada", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as-wc1", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup #1", "city": "ลิมา", "country": "เปรู", "start": "2027-02-26", "end": "2027-02-28", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Artistic Swimming World Cup #1", "city_en": "Lima", "country_en": "Peru", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "dv-wc2", "sport": "dive", "tier": 2, "name": "Diving World Cup #2", "city": "เม็กซิโก (เมืองรอประกาศ)", "country": "เม็กซิโก", "start": "2027-03-04", "end": "2027-03-07", "status": "tbc", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Diving World Cup #2", "city_en": "Mexico (city to be announced)", "country_en": "Mexico", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "ow-wc2", "sport": "open", "tier": 2, "name": "Open Water World Cup #2", "city": "โซมาเบย์", "country": "อียิปต์", "start": "2027-03-19", "end": "2027-03-20", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Open Water World Cup #2", "city_en": "Somabay", "country_en": "Egypt", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as-wc2", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup #2", "city": "รอประกาศ", "country": "", "start": "2027-03-19", "end": "2027-03-21", "status": "tbc", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Artistic Swimming World Cup #2", "city_en": "To be announced", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as-wc3", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup #3", "city": "ปารีส", "country": "ฝรั่งเศส", "start": "2027-03-26", "end": "2027-03-28", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Artistic Swimming World Cup #3", "city_en": "Paris", "country_en": "France", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "dv-madrid", "sport": "dive", "tier": 4, "name": "Madrid International Diving Meet", "city": "มาดริด", "country": "สเปน", "start": "2027-04-01", "end": "2027-04-04", "status": "confirmed", "name_en": "Madrid International Diving Meet", "city_en": "Madrid", "country_en": "Spain"},
+{"id": "dv-canada", "sport": "dive", "tier": 4, "name": "Canada Cup of Diving", "city": "วินด์เซอร์", "country": "แคนาดา", "start": "2027-04-15", "end": "2027-04-18", "status": "confirmed", "name_en": "Canada Cup of Diving", "city_en": "Windsor", "country_en": "Canada"},
+{"id": "ow-wc3", "sport": "open", "tier": 2, "name": "Open Water World Cup #3", "city": "รอประกาศ", "country": "", "start": "2027-04-23", "end": "2027-04-24", "status": "tbc", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Open Water World Cup #3", "city_en": "To be announced", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as-wc4", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup #4", "city": "มาร์คัม", "country": "แคนาดา", "start": "2027-04-29", "end": "2027-05-01", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Artistic Swimming World Cup #4", "city_en": "Markham", "country_en": "Canada", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "ow-wc4", "sport": "open", "tier": 2, "name": "Open Water World Cup #4", "city": "โกลโฟอารันชี", "country": "อิตาลี", "start": "2027-04-30", "end": "2027-05-01", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Open Water World Cup #4", "city_en": "Golfo Aranci", "country_en": "Italy", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "dv-superfinal", "sport": "dive", "tier": 2, "name": "Diving World Cup Super Final", "city": "ปักกิ่ง", "country": "จีน", "start": "2027-04-30", "end": "2027-05-02", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Diving World Cup Super Final", "city_en": "Beijing", "country_en": "China", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "ow-wc5", "sport": "open", "tier": 2, "name": "Open Water World Cup #5", "city": "เซตูบัล", "country": "โปรตุเกส", "start": "2027-05-28", "end": "2027-05-29", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Open Water World Cup #5", "city_en": "Setúbal", "country_en": "Portugal", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as-superfinal", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup Super Final", "city": "รอประกาศ", "country": "", "start": "2027-06-11", "end": "2027-06-13", "status": "tbc", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Artistic Swimming World Cup Super Final", "city_en": "To be announced", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as-eg", "sport": "art", "tier": 3, "name": "European Games", "city": "อิสตันบูล", "country": "ตุรกี", "start": "2027-06-16", "end": "2027-06-27", "status": "confirmed", "note": "ว่ายน้ำลีลาเป็นหนึ่งในกีฬาที่บรรจุ", "name_en": "European Games", "city_en": "Istanbul", "country_en": "Türkiye", "note_en": "Artistic swimming is among the sports on the programme"},
+{"id": "wc-dive", "sport": "dive", "tier": 1, "name": "ชิงแชมป์โลก World Aquatics Championships", "city": "บูดาเปสต์", "country": "ฮังการี", "start": "2027-06-26", "end": "2027-07-04", "status": "confirmed", "organizer": "World Aquatics และสหพันธ์ว่ายน้ำฮังการี", "url": "https://www.worldaquatics.com", "note": "ไม่รวมกระโดดน้ำจากหอสูง (High Diving) 8–11 ก.ค.", "name_en": "World Aquatics Championships", "city_en": "Budapest", "country_en": "Hungary", "organizer_en": "World Aquatics and the Hungarian Swimming Federation", "note_en": "Excludes High Diving (8–11 Jul)", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "wc-polo", "sport": "polo", "tier": 1, "name": "ชิงแชมป์โลก World Aquatics Championships", "city": "บูดาเปสต์", "country": "ฮังการี", "start": "2027-06-26", "end": "2027-07-09", "status": "confirmed", "organizer": "World Aquatics และสหพันธ์ว่ายน้ำฮังการี", "url": "https://www.worldaquatics.com", "name_en": "World Aquatics Championships", "city_en": "Budapest", "country_en": "Hungary", "organizer_en": "World Aquatics and the Hungarian Swimming Federation", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "wc-open", "sport": "open", "tier": 1, "name": "ชิงแชมป์โลก World Aquatics Championships", "city": "บูดาเปสต์", "country": "ฮังการี", "start": "2027-07-03", "end": "2027-07-08", "status": "confirmed", "organizer": "World Aquatics และสหพันธ์ว่ายน้ำฮังการี", "url": "https://www.worldaquatics.com", "name_en": "World Aquatics Championships", "city_en": "Budapest", "country_en": "Hungary", "organizer_en": "World Aquatics and the Hungarian Swimming Federation", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "wc-art", "sport": "art", "tier": 1, "name": "ชิงแชมป์โลก World Aquatics Championships", "city": "บูดาเปสต์", "country": "ฮังการี", "start": "2027-07-10", "end": "2027-07-17", "status": "confirmed", "organizer": "World Aquatics และสหพันธ์ว่ายน้ำฮังการี", "url": "https://www.worldaquatics.com", "name_en": "World Aquatics Championships", "city_en": "Budapest", "country_en": "Hungary", "organizer_en": "World Aquatics and the Hungarian Swimming Federation", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "wc-swim", "sport": "swim", "tier": 1, "name": "ชิงแชมป์โลก World Aquatics Championships", "city": "บูดาเปสต์", "country": "ฮังการี", "start": "2027-07-10", "end": "2027-07-18", "status": "confirmed", "organizer": "World Aquatics และสหพันธ์ว่ายน้ำฮังการี", "url": "https://www.worldaquatics.com", "name_en": "World Aquatics Championships", "city_en": "Budapest", "country_en": "Hungary", "organizer_en": "World Aquatics and the Hungarian Swimming Federation", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "sea34", "sport": "swim", "tier": 3, "name": "SEA Games ครั้งที่ 34 (ว่ายน้ำและกระโดดน้ำ)", "city": "กูชิง", "country": "มาเลเซีย", "start": "2027-09-18", "end": "2027-09-29", "status": "tbc", "note": "ช่วงวันของกีฬาทางน้ำยังไม่ยืนยัน โปโลน้ำ ว่ายน้ำลีลา และว่ายน้ำโอเพ่นวอเตอร์ ยังไม่พบข้อมูลว่าบรรจุในโปรแกรม", "name_en": "34th SEA Games (Swimming and Diving)", "city_en": "Kuching", "country_en": "Malaysia", "note_en": "Dates for aquatic sports not yet confirmed. Water polo, artistic swimming and open water swimming not yet found on the programme"},
+{"id": "sw-wc1", "sport": "swim", "tier": 2, "name": "Swimming World Cup #1", "city": "เบอร์ลิน", "country": "เยอรมนี", "start": "2027-10-15", "end": "2027-10-17", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Swimming World Cup #1", "city_en": "Berlin", "country_en": "Germany", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "sw-wc2", "sport": "swim", "tier": 2, "name": "Swimming World Cup #2", "city": "ปารีส", "country": "ฝรั่งเศส", "start": "2027-10-22", "end": "2027-10-24", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Swimming World Cup #2", "city_en": "Paris", "country_en": "France", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "sw-wc3", "sport": "swim", "tier": 2, "name": "Swimming World Cup #3", "city": "ลอนดอน", "country": "สหราชอาณาจักร", "start": "2027-10-29", "end": "2027-10-31", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "Swimming World Cup #3", "city_en": "London", "country_en": "United Kingdom", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "wp-u20-m", "sport": "polo", "tier": 2, "name": "U20 World Championships ชาย", "month": 5, "status": "tbc", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "U20 World Championships (Men)", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "sw-mare", "sport": "swim", "tier": 4, "name": "Mare Nostrum", "month": 5, "status": "tbc", "name_en": "Mare Nostrum"},
+{"id": "wp-u20-w", "sport": "polo", "tier": 2, "name": "U20 World Championships หญิง", "month": 8, "status": "tbc", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "U20 World Championships (Women)", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "sw-junior", "sport": "swim", "tier": 2, "name": "World Aquatics Junior Swimming Championships", "month": 8, "status": "estimate", "note": "ประมาณการช่วง ส.ค.–ก.ย.", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "World Aquatics Junior Swimming Championships", "note_en": "Estimated for Aug–Sep", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as-youth", "sport": "art", "tier": 2, "name": "World Aquatics Youth Artistic Swimming Championships", "status": "confirmed", "organizer": "World Aquatics", "url": "https://www.worldaquatics.com", "name_en": "World Aquatics Youth Artistic Swimming Championships", "city": "แคลการี", "city_en": "Calgary", "country": "แคนาดา", "country_en": "Canada", "start": "2027-08-18", "end": "2027-08-22", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "dv-rostock", "sport": "dive", "tier": 4, "name": "Diving Recognised Event รอสต็อก", "city": "รอสต็อก", "country": "เยอรมนี", "status": "tbc", "note": "ยังไม่ทราบวันแข่ง", "name_en": "Diving Recognised Event, Rostock", "city_en": "Rostock", "country_en": "Germany", "note_en": "Dates not yet known"},
+{"id": "ol28-polo", "sport": "polo", "tier": 1, "name": "โอลิมปิกเกมส์ ลอสแอนเจลิส 2028 (โปโลน้ำ)", "name_en": "Los Angeles 2028 Olympic Games (Water Polo)", "start": "2028-07-12", "end": "2028-07-23", "status": "estimate", "city": "ลองบีช", "city_en": "Long Beach", "country": "สหรัฐอเมริกา", "country_en": "United States", "venue": "Long Beach Aquatics Center", "venue_en": "Long Beach Aquatics Center", "organizer": "คณะกรรมการจัดการแข่งขัน LA28", "organizer_en": "LA28 Organising Committee", "url": "https://la28.org", "note": "วันที่คำนวณจากโปรแกรมการแข่งขันของ LA28 ฉบับปัจจุบัน อาจมีการเปลี่ยนแปลง", "note_en": "Dates derived from the current LA28 competition schedule and may change"},
+{"id": "ol28-open", "sport": "open", "tier": 1, "name": "โอลิมปิกเกมส์ ลอสแอนเจลิส 2028 (ว่ายน้ำโอเพ่นวอเตอร์ 10 กม.)", "name_en": "Los Angeles 2028 Olympic Games (Marathon Swimming 10 km)", "start": "2028-07-17", "end": "2028-07-18", "status": "estimate", "city": "ลองบีช", "city_en": "Long Beach", "country": "สหรัฐอเมริกา", "country_en": "United States", "venue": "Belmont Shore", "venue_en": "Belmont Shore", "organizer": "คณะกรรมการจัดการแข่งขัน LA28", "organizer_en": "LA28 Organising Committee", "url": "https://la28.org", "note": "วันที่คำนวณจากโปรแกรมการแข่งขันของ LA28 ฉบับปัจจุบัน อาจมีการเปลี่ยนแปลง", "note_en": "Dates derived from the current LA28 competition schedule and may change"},
+{"id": "ol28-dive", "sport": "dive", "tier": 1, "name": "โอลิมปิกเกมส์ ลอสแอนเจลิส 2028 (กระโดดน้ำ)", "name_en": "Los Angeles 2028 Olympic Games (Diving)", "start": "2028-07-16", "end": "2028-07-28", "status": "estimate", "city": "พาซาดีนา", "city_en": "Pasadena", "country": "สหรัฐอเมริกา", "country_en": "United States", "venue": "Rose Bowl Aquatics Center", "venue_en": "Rose Bowl Aquatics Center", "organizer": "คณะกรรมการจัดการแข่งขัน LA28", "organizer_en": "LA28 Organising Committee", "url": "https://la28.org", "note": "วันที่คำนวณจากโปรแกรมการแข่งขันของ LA28 ฉบับปัจจุบัน อาจมีการเปลี่ยนแปลง", "note_en": "Dates derived from the current LA28 competition schedule and may change"},
+{"id": "ol28-swim", "sport": "swim", "tier": 1, "name": "โอลิมปิกเกมส์ ลอสแอนเจลิส 2028 (ว่ายน้ำ)", "name_en": "Los Angeles 2028 Olympic Games (Swimming)", "start": "2028-07-22", "end": "2028-07-30", "status": "estimate", "city": "อิงเกิลวูด", "city_en": "Inglewood", "country": "สหรัฐอเมริกา", "country_en": "United States", "venue": "SoFi Stadium", "venue_en": "SoFi Stadium", "organizer": "คณะกรรมการจัดการแข่งขัน LA28", "organizer_en": "LA28 Organising Committee", "url": "https://la28.org", "note": "วันที่คำนวณจากโปรแกรมการแข่งขันของ LA28 ฉบับปัจจุบัน อาจมีการเปลี่ยนแปลง", "note_en": "Dates derived from the current LA28 competition schedule and may change"},
+{"id": "ol28-art", "sport": "art", "tier": 1, "name": "โอลิมปิกเกมส์ ลอสแอนเจลิส 2028 (ว่ายน้ำลีลา)", "name_en": "Los Angeles 2028 Olympic Games (Artistic Swimming)", "start": "2028-07-25", "end": "2028-07-29", "status": "estimate", "city": "ลองบีช", "city_en": "Long Beach", "country": "สหรัฐอเมริกา", "country_en": "United States", "venue": "Long Beach Aquatics Center", "venue_en": "Long Beach Aquatics Center", "organizer": "คณะกรรมการจัดการแข่งขัน LA28", "organizer_en": "LA28 Organising Committee", "url": "https://la28.org", "note": "วันที่คำนวณจากโปรแกรมการแข่งขันของ LA28 ฉบับปัจจุบัน อาจมีการเปลี่ยนแปลง", "note_en": "Dates derived from the current LA28 competition schedule and may change"},
+{"id": "as28-wc1", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup #1", "name_en": "Artistic Swimming World Cup #1", "start": "2028-02-25", "end": "2028-02-27", "status": "confirmed", "city": "ลิมา", "city_en": "Lima", "country": "เปรู", "country_en": "Peru", "organizer": "World Aquatics", "organizer_en": "World Aquatics", "url": "https://www.worldaquatics.com", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as28-wc2", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup #2", "name_en": "Artistic Swimming World Cup #2", "start": "2028-03-24", "end": "2028-03-26", "status": "confirmed", "city": "ปารีส", "city_en": "Paris", "country": "ฝรั่งเศส", "country_en": "France", "organizer": "World Aquatics", "organizer_en": "World Aquatics", "url": "https://www.worldaquatics.com", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as28-wc3", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup #3", "name_en": "Artistic Swimming World Cup #3", "start": "2028-04-28", "end": "2028-04-30", "status": "tbc", "city": "รอประกาศ", "city_en": "To be announced", "organizer": "World Aquatics", "organizer_en": "World Aquatics", "url": "https://www.worldaquatics.com", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as28-wc4", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup #4", "name_en": "Artistic Swimming World Cup #4", "year": 2028, "month": 5, "status": "tbc", "note": "ยังไม่ทราบวันและสถานที่", "note_en": "Dates and host not yet known", "organizer": "World Aquatics", "organizer_en": "World Aquatics", "url": "https://www.worldaquatics.com", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as28-super", "sport": "art", "tier": 2, "name": "Artistic Swimming World Cup Super Final", "name_en": "Artistic Swimming World Cup Super Final", "start": "2028-06-16", "end": "2028-06-18", "status": "confirmed", "city": "รอประกาศ", "city_en": "To be announced", "country": "แคนาดา", "country_en": "Canada", "organizer": "World Aquatics", "organizer_en": "World Aquatics", "url": "https://www.worldaquatics.com", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "as28-junior", "sport": "art", "tier": 2, "name": "World Aquatics Junior Artistic Swimming Championships", "name_en": "World Aquatics Junior Artistic Swimming Championships", "start": "2028-08-30", "end": "2028-09-03", "status": "confirmed", "city": "ซานเตียโก", "city_en": "Santiago", "country": "ชิลี", "country_en": "Chile", "organizer": "World Aquatics", "organizer_en": "World Aquatics", "url": "https://www.worldaquatics.com", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10"},
+{"id": "masters27", "sport": "mas", "tier": 2, "name": "ชิงแชมป์โลกมาสเตอร์ World Aquatics Masters Championships", "name_en": "World Aquatics Masters Championships", "city": "บูดาเปสต์", "city_en": "Budapest", "country": "ฮังการี", "country_en": "Hungary", "start": "2027-06-26", "end": "2027-07-17", "status": "confirmed", "organizer": "World Aquatics", "organizer_en": "World Aquatics", "url": "https://www.worldaquatics.com/competitions/5574/world-aquatics-masters-championships-budapest-2027", "contact": "World Aquatics (โลซานน์ สวิตเซอร์แลนด์) โทร +41 21 310 47 10", "contact_en": "World Aquatics (Lausanne, Switzerland) Tel +41 21 310 47 10", "note": "ว่ายน้ำลีลา 26–30 มิ.ย. · ว่ายน้ำโอเพ่นวอเตอร์ 29–30 มิ.ย. · ว่ายน้ำ 3–9 ก.ค. · กระโดดน้ำ 5–10 ก.ค. · โปโลน้ำ 11–17 ก.ค. จัดควบคู่กับการแข่งขันชิงแชมป์โลก", "note_en": "Artistic swimming 26–30 Jun · Open water 29–30 Jun · Swimming 3–9 Jul · Diving 5–10 Jul · Water polo 11–17 Jul. Held alongside the World Aquatics Championships."}
+]}
+</script>
+
+<script>
+(function(){
+var DATA=JSON.parse(document.getElementById('events-data').textContent);
+var EV=DATA.events;
+var BASEY=2027,NM=24;
+var lang='th';
+try{var sv=localStorage.getItem('tasa-lang');if(sv==='th'||sv==='en')lang=sv;else if(navigator.language&&navigator.language.toLowerCase().indexOf('th')!==0)lang='en';}catch(e){}
+var T={
+ th:{
+  orgdept:'ฝ่ายกิจการต่างประเทศ',mini:'สมาคมกีฬาทางน้ำแห่งประเทศไทย',orgname:'สมาคมกีฬาทางน้ำแห่งประเทศไทย',orgsub:'Thailand Aquatic Sports Association : TASA',badge:'✨ ร่วมเชียร์ไปกับ น้องพูล & น้องมารีน',
+  h1:'ปฏิทินการแข่งขันกีฬาทางน้ำ รายการนานาชาติ',sub:'รายการระดับ Tier 1–4 ตามเกณฑ์ World Aquatics · ตรวจสอบล่าสุด {d} · ชี้เมาส์หรือแตะที่รายการเพื่อดูรายละเอียด',
+  prev:'« ก่อนหน้า',next:'ถัดไป »',vc:'ปฏิทิน',vl:'รายการ',
+  months:['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
+  ms:['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'],
+  dow:['อา.','จ.','อ.','พ.','พฤ.','ศ.','ส.'],
+  sport:{swim:'ว่ายน้ำ',polo:'โปโลน้ำ',dive:'กระโดดน้ำ',art:'ว่ายน้ำลีลา',open:'ว่ายน้ำโอเพ่นวอเตอร์',mas:'กีฬาทางน้ำมาสเตอร์'},
+  stat:{confirmed:['ยืนยันวันแข่งแล้ว',0],tbc:['รอประกาศอย่างเป็นทางการ',1],estimate:['ประมาณการ',1]},
+  tierlbl:'ระดับ',tiername:function(t){return 'Tier '+t;},
+  tier:{1:'โอลิมปิกเกมส์ และการแข่งขันชิงแชมป์โลก World Aquatics',2:'World Cup ชิงแชมป์โลกรุ่นเยาวชนและรุ่นอายุ และรายการอื่นที่ World Aquatics จัดการแข่งขัน',3:'มหกรรมกีฬาระดับทวีปและภูมิภาค เช่น SEA Games, Asian Games, European Games',4:'การแข่งขันนานาชาติที่สหพันธ์สมาชิกเป็นผู้จัด'},
+  tiersh:'ระดับรายการ (Tier) ตามเกณฑ์ World Aquatics',tiersp:'อ้างอิงข้อบังคับการแข่งขัน World Aquatics ภาคที่ 1 ข้อ 2.2.1 โดยสรุปความเป็นภาษาไทย',
+  noteh:'หมายเหตุ',notes:['รายการปี พ.ศ. 2571 บางส่วน เช่น World Cup กระโดดน้ำ ว่ายน้ำโอเพ่นวอเตอร์ และว่ายน้ำ ยังไม่มีการประกาศวันแข่งขัน จะเพิ่มให้เมื่อ World Aquatics ประกาศ','แถบลายเฉียงหมายถึงวันหรือรายละเอียดที่ยังรอประกาศอย่างเป็นทางการ','ข้อมูลที่ยังไม่พบแหล่งทางการแสดงเป็น "รอตรวจสอบ" และจะถูกเติมเมื่อมีการอัปเดตรอบถัดไป','ควรตรวจสอบกับปฏิทินทางการของ World Aquatics ก่อนใช้อ้างอิงในหนังสือราชการ'],
+  logh:'ประวัติการอัปเดตล่าสุด',chiph:'รอประกาศวันแข่งขันในเดือนนี้',unkh:'ยังไม่ทราบเดือนหรือวันแข่งขัน',none:'ไม่มีรายการที่ระบุวันแข่งขันในเดือนนี้',
+  lDate:'วันที่แข่ง',lStat:'สถานะ',lLoc:'เมือง/ประเทศ',lVenue:'สนามแข่ง',lOrg:'ผู้จัด',lContact:'ติดต่อ',lWeb:'เว็บไซต์',lNote:'หมายเหตุ',na:'รอตรวจสอบ',close:'ปิด',
+  monthOnly:function(mn,y){return 'ช่วงเดือน'+mn+' '+y+' (ยังไม่ทราบวันที่)';},noDate:'ยังไม่ทราบวันแข่งขัน',
+  ftorg:'สำนักงานเลขาธิการ สมาคมกีฬาทางน้ำแห่งประเทศไทย',sph:'ผู้สนับสนุน',addr:'ชั้น 21 อาคารเฉลิมพระเกียรติ 7 รอบ พระชนมพรรษา<br>เลขที่ 286 การกีฬาแห่งประเทศไทย ถนนรามคำแหง<br>แขวงหัวหมาก เขตบางกะปิ กรุงเทพมหานคร 10240',ftdept:'ข้อมูลเพื่อการประสานงาน ฝ่ายกิจการต่างประเทศ (Foreign Affairs Department)',ftmail:'อีเมล:',copy:'คัดลอก',copied:'คัดลอกแล้ว',
+  logoalt:'โลโก้สมาคมกีฬาทางน้ำแห่งประเทศไทย',title:'ปฏิทินกีฬาทางน้ำนานาชาติ',year:function(y){return y+543;},yearAlt:function(y){return 'ค.ศ. '+y;}
+ },
+ en:{
+  orgdept:'Foreign Affairs Department',mini:'TASA · Thailand Aquatic Sports Association',orgname:'Thailand Aquatic Sports Association : TASA',orgsub:'',badge:'✨ Cheer with Nong Pool & Nong Marine',
+  h1:'International Aquatic Sports Competition Calendar',sub:'Tier 1–4 events under the World Aquatics classification · Last checked {d} · Hover or tap an event for details',
+  prev:'« Previous',next:'Next »',vc:'Calendar',vl:'List',
+  months:['January','February','March','April','May','June','July','August','September','October','November','December'],
+  ms:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+  dow:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+  sport:{swim:'Swimming',polo:'Water Polo',dive:'Diving',art:'Artistic Swimming',open:'Open Water Swimming',mas:'Masters Aquatics'},
+  stat:{confirmed:['Dates confirmed',0],tbc:['Awaiting official announcement',1],estimate:['Estimated',1]},
+  tierlbl:'Tier',tiername:function(t){return 'Tier '+t;},
+  tier:{1:'Olympic Games and World Aquatics Championships',2:'World Cups, World Junior/Youth and age-group Championships, and other competitions organised by World Aquatics',3:'Continental and regional multi-sport games, e.g. SEA Games, Asian Games, European Games',4:'International competitions organised by member federations'},
+  tiersh:'Event tiers under the World Aquatics classification',tiersp:'Based on World Aquatics Competition Regulations, Part One, Art. 2.2.1 (summarised).',
+  noteh:'Notes',notes:['Some 2028 events (e.g. Diving, Open Water and Swimming World Cups) have not yet been announced and will be added once World Aquatics publishes them.','Striped bars mark dates or details still awaiting official announcement.','Details without an official source are shown as "To be verified" and are filled in at later updates.','Please check the official World Aquatics calendar before citing in official correspondence.'],
+  logh:'Recent updates',chiph:'Dates to be announced this month',unkh:'Month or dates not yet known',none:'No events with confirmed dates this month.',
+  lDate:'Dates',lStat:'Status',lLoc:'Location',lVenue:'Venue',lOrg:'Organiser',lContact:'Contact',lWeb:'Website',lNote:'Note',na:'To be verified',close:'Close',
+  monthOnly:function(mn,y){return 'During '+mn+' '+y+' (exact dates not yet known)';},noDate:'Dates not yet known',
+  ftorg:'Secretariat, Thailand Aquatic Sports Association',sph:'Sponsors',addr:'Floor 21, 7th Cycle Birthday Anniversary Commemoration Building<br>286 Sports Authority of Thailand, Ramkhamhaeng Road<br>Hua Mak, Bang Kapi, Bangkok 10240',ftdept:'Information for coordination, Foreign Affairs Department',ftmail:'Email:',copy:'Copy',copied:'Copied',
+  logoalt:'Thailand Aquatic Sports Association logo',title:'International Aquatics Calendar',year:function(y){return y;},yearAlt:function(y){return 'B.E. '+(y+543);}
+ }
+};
+var SK=['swim','polo','dive','art','open','mas'];
+var onSport={swim:1,polo:1,dive:1,art:1,open:1,mas:1},onTier={1:1,2:1,3:1,4:1};
+var cur=0,pinned=null;
+function t(){return T[lang];}
+function L(e,k){return lang==='en'?(e[k+'_en']||e[k]):e[k];}
+function d(s){var p=s.split('-');return Date.UTC(+p[0],+p[1]-1,+p[2]);}
+function dt(ms){return new Date(ms);}
+function yr(y){return lang==='th'?y+543:y;}
+function fmt(s,e){
+  var a=dt(d(s)),b=dt(d(e)),MS=t().ms;
+  var sa=a.getUTCDate(),ea=b.getUTCDate(),ma=a.getUTCMonth(),mb=b.getUTCMonth();
+  if(ma===mb)return sa===ea?sa+' '+MS[ma]+' '+yr(a.getUTCFullYear()):sa+'–'+ea+' '+MS[ma]+' '+yr(a.getUTCFullYear());
+  return sa+' '+MS[ma]+' – '+ea+' '+MS[mb]+' '+yr(b.getUTCFullYear());
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function place(e){var p=[],c=L(e,'city'),k=L(e,'country');if(c)p.push(c);if(k&&k!==c)p.push(k);return p.join(', ');}
+function label(e){var c=L(e,'city');return L(e,'name')+(c?' · '+c:'');}
+function visible(e){return onSport[e.sport]&&onTier[e.tier];}
+function byId(id){for(var i=0;i<EV.length;i++)if(EV[i].id===id)return EV[i];}
+function $(id){return document.getElementById(id);}
+function ymd(s){var p=s.split('-');return (+p[2])+' '+t().ms[+p[1]-1]+' '+yr(+p[0]);}
+
+/* static text */
+function renderStatic(){
+  var x=t();document.documentElement.lang=lang;document.title=x.title;
+  $('orgname').textContent=x.orgname;$('orgsub').textContent=x.orgsub;$('orgdept').textContent=x.orgdept;$('orgsub').hidden=!x.orgsub;
+  document.querySelector('.logo-img').alt=x.logoalt;
+  $('h1').textContent=x.h1;$('subline').innerHTML=esc(x.sub).replace('{d}','<b>'+esc(ymd(DATA.updated))+'</b>');
+  $('prev').textContent=x.prev;$('next').textContent=x.next;$('vc').textContent=x.vc;$('vl').textContent=x.vl;
+  Array.prototype.forEach.call(document.querySelectorAll('.lb'),function(b){b.setAttribute('aria-pressed',b.dataset.l===lang?'true':'false');});$('mbname').textContent=x.mini;
+  $('msel').setAttribute('aria-label',lang==='th'?'เลือกเดือน':'Select month');
+  fillMonths();$('y0').textContent=x.year(BASEY);$('y1').textContent=x.year(BASEY+1);
+  $('sportf').setAttribute('aria-label',lang==='th'?'กรองตามชนิดกีฬา':'Filter by sport');
+  $('tierf').setAttribute('aria-label',lang==='th'?'กรองตามระดับรายการ':'Filter by tier');
+  $('sportf').innerHTML='';$('tierf').innerHTML='';
+  SK.forEach(function(k){var b=document.createElement('button');b.type='button';b.className='lg';b.setAttribute('aria-pressed',onSport[k]?'true':'false');
+    b.innerHTML='<i style="background:var(--'+k+')"></i>'+x.sport[k];
+    b.onclick=function(){onSport[k]=onSport[k]?0:1;b.setAttribute('aria-pressed',onSport[k]?'true':'false');applyFilter();};$('sportf').appendChild(b);});
+  [1,2,3,4].forEach(function(n){var b=document.createElement('button');b.type='button';b.className='lg tier';b.setAttribute('aria-pressed',onTier[n]?'true':'false');
+    b.textContent=x.tiername(n);b.title=x.tiername(n)+': '+x.tier[n];
+    b.onclick=function(){onTier[n]=onTier[n]?0:1;b.setAttribute('aria-pressed',onTier[n]?'true':'false');applyFilter();};$('tierf').appendChild(b);});
+  $('tiers').innerHTML='<h3>'+esc(x.tiersh)+'</h3><p>'+esc(x.tiersp)+'</p><ul>'+[1,2,3,4].map(function(n){return '<li><span class="tg">'+x.tiername(n)+'</span><span>'+esc(x.tier[n])+'</span></li>';}).join('')+'</ul>';
+  $('notes').innerHTML='<h3>'+esc(x.noteh)+'</h3><ul>'+x.notes.map(function(n){return '<li>'+esc(n)+'</li>';}).join('')+'</ul>';
+  var log=DATA.changelog||[];$('logbox').hidden=!log.length;$('logh').textContent=x.logh;
+  $('log').innerHTML=log.slice(0,8).map(function(c){return '<li><b>'+esc(ymd(c.date))+'</b> '+esc(lang==='en'?(c.text_en||c.text):c.text)+'</li>';}).join('');
+  $('ftorg').textContent=x.ftorg;$('sph').textContent=x.sph;$('ftaddr').innerHTML=x.addr;$('ftdept').textContent=x.ftdept;$('ftmaillbl').textContent=x.ftmail;$('ftcopy').textContent=x.copy;
+  $('pop').dataset.id='';
+}
+
+/* calendar */
+var cal=$('cal');
+function weeksOf(y,m){
+  var first=Date.UTC(y,m,1),dow=dt(first).getUTCDay(),start=first-dow*864e5,out=[];
+  var last=Date.UTC(y,m+1,0);
+  for(var s=start;s<=last;s+=7*864e5){var w=[];for(var i=0;i<7;i++)w.push(s+i*864e5);out.push(w);}
+  return out;
+}
+function chipBtn(e){return '<button type="button" class="chip" data-id="'+e.id+'" data-s="'+e.sport+'" data-t="'+e.tier+'" style="background:var(--'+e.sport+')"><b>T'+e.tier+'</b>'+t().sport[e.sport]+': '+esc(L(e,'name'))+'</button>';}
+function monthHtml(g){
+  var y=BASEY+Math.floor(g/12),m=g%12;
+  var x=t(),dated=EV.filter(function(e){return e.start;});
+  var html='<section class="month" data-m="'+g+'"><h2>'+x.months[m]+' '+x.year(y)+' <small>('+x.yearAlt(y)+')</small></h2><div class="dow">'+x.dow.map(function(n){return '<div>'+n+'</div>';}).join('')+'</div>';
+  weeksOf(y,m).forEach(function(w){
+    var ws=w[0],we=w[6];
+    var evs=dated.filter(function(e){return d(e.start)<=we&&d(e.end)>=ws;}).sort(function(a,b){return d(a.start)-d(b.start)||(d(b.end)-d(b.start))-(d(a.end)-d(a.start));});
+    var lanes=[],pl=[];
+    evs.forEach(function(e){
+      var c0=Math.max(Math.round((d(e.start)-ws)/864e5),0),c1=Math.min(Math.round((d(e.end)-ws)/864e5),6),li=-1;
+      for(var i=0;i<lanes.length;i++){if(lanes[i].every(function(r){return c1<r[0]||c0>r[1];})){li=i;break;}}
+      if(li<0){lanes.push([]);li=lanes.length-1;}
+      lanes[li].push([c0,c1]);pl.push([li,c0,c1,e]);});
+    html+='<div class="week"><div class="days">'+w.map(function(ms){var q=dt(ms),o=q.getUTCMonth()!==m,wk=q.getUTCDay()===0||q.getUTCDay()===6;
+      return '<div class="day'+(o?' out':'')+(wk?' we':'')+'"><span>'+q.getUTCDate()+'</span></div>';}).join('')+'</div>';
+    if(pl.length){html+='<div class="evs">'+pl.map(function(p){var e=p[3],cl='ev'+(d(e.start)<ws?' cs':'')+(d(e.end)>we?' ce':'')+(e.status!=='confirmed'?' tbc':'');
+      return '<div class="'+cl+'" tabindex="0" data-id="'+e.id+'" data-s="'+e.sport+'" data-t="'+e.tier+'" style="grid-column:'+(p[1]+1)+'/'+(p[2]+2)+';grid-row:'+(p[0]+1)+';background:var(--'+e.sport+')"><b>T'+e.tier+'</b>'+esc(label(e))+'</div>';}).join('')+'</div>';}
+    html+='</div>';
+  });
+  var m0=Date.UTC(y,m,1),m1=Date.UTC(y,m+1,0);
+  var li=dated.filter(function(e){return d(e.start)<=m1&&d(e.end)>=m0;}).sort(function(a,b){return d(a.start)-d(b.start);});
+  html+='<div class="list">'+(li.length?li.map(function(e){var st=e.status!=='confirmed';
+    return '<button type="button" class="item" data-id="'+e.id+'" data-s="'+e.sport+'" data-t="'+e.tier+'" style="--c:var(--'+e.sport+')"><span class="n">'+esc(L(e,'name'))+'</span><span class="tg">T'+e.tier+'</span><span class="m">'+fmt(e.start,e.end)+' · '+x.sport[e.sport]+(place(e)?' · '+esc(place(e)):'')+(st?' · <span class="w">'+x.stat[e.status][0]+'</span>':'')+'</span></button>';}).join(''):'<p class="none">'+x.none+'</p>')+'</div>';
+  var ch=EV.filter(function(e){return !e.start&&e.month===m+1&&(e.year||BASEY)===y;});
+  if(ch.length)html+='<div class="chips"><h3>'+x.chiph+'</h3>'+ch.map(chipBtn).join('')+'</div>';
+  var un=(g===NM-1)?EV.filter(function(e){return !e.start&&!e.month;}):[];
+  if(un.length)html+='<div class="chips"><h3>'+x.unkh+'</h3>'+un.map(chipBtn).join('')+'</div>';
+  return html+'</section>';
+}
+function renderCal(){var h='';for(var g=0;g<NM;g++)h+=monthHtml(g);cal.innerHTML=h;applyFilter();show(cur);}
+function show(m){
+  cur=Math.max(0,Math.min(NM-1,m));fillMonths();
+  Array.prototype.forEach.call(cal.children,function(s){s.classList.toggle('on',+s.dataset.m===cur);});
+  $('prev').disabled=cur%12===0;$('next').disabled=cur%12===11;$('y0').setAttribute('aria-pressed',cur<12?'true':'false');$('y1').setAttribute('aria-pressed',cur>=12?'true':'false');hidePop(true);
+}
+function applyFilter(){Array.prototype.forEach.call(cal.querySelectorAll('[data-id]'),function(n){var e=byId(n.dataset.id);n.classList.toggle('dim',!visible(e));});}
+$('prev').onclick=function(){show(cur-1);};
+$('next').onclick=function(){show(cur+1);};
+$('msel').onchange=function(){show(Math.floor(cur/12)*12+(+$('msel').value));};
+function fillMonths(){var x=t(),yy=Math.floor(cur/12),oh='';for(var i=0;i<12;i++){oh+='<option value="'+i+'">'+x.months[i]+' '+x.year(BASEY+yy)+'</option>';}$('msel').innerHTML=oh;$('msel').value=cur%12;}
+
+/* floating detail card */
+var pop=$('pop');
+function popHtml(e){
+  var x=t(),st=x.stat[e.status]||x.stat.confirmed;
+  var date=e.start?fmt(e.start,e.end):(e.month?x.monthOnly(x.months[e.month-1],x.year(e.year||BASEY)):x.noDate);
+  function row(k,v,link){
+    if(v)return '<dt>'+k+'</dt><dd>'+(link==='a'?'<a href="'+esc(v)+'" target="_blank" rel="noopener">'+esc(v.replace(/^https?:\/\/(www\.)?/,''))+'</a>':esc(v))+'</dd>';
+    return '<dt>'+k+'</dt><dd class="na">'+x.na+'</dd>';}
+  var note=L(e,'note');
+  return '<div class="top" style="background:var(--'+e.sport+')"><div class="k">'+x.sport[e.sport]+' · '+x.tiername(e.tier)+'</div><div class="t">'+esc(L(e,'name'))+'</div></div>'+
+   '<button class="x" type="button" aria-label="'+x.close+'">'+x.close+'</button><dl>'+
+   '<dt>'+x.lDate+'</dt><dd>'+date+'</dd>'+
+   '<dt>'+x.lStat+'</dt><dd><span class="st'+(st[1]?' w':'')+'">'+st[0]+'</span></dd>'+
+   '<dt>'+x.tierlbl+'</dt><dd>'+x.tiername(e.tier)+'<div class="tiernote">'+esc(x.tier[e.tier])+'</div></dd>'+
+   row(x.lLoc,place(e))+row(x.lVenue,L(e,'venue'))+row(x.lOrg,L(e,'organizer'))+row(x.lContact,L(e,'contact'))+row(x.lWeb,e.url,'a')+
+   (note?'<dt>'+x.lNote+'</dt><dd>'+esc(note)+'</dd>':'')+'</dl>';
+}
+function placePop(px,py){
+  var pw=pop.offsetWidth,ph=pop.offsetHeight,vw=document.documentElement.clientWidth,vh=window.innerHeight;
+  var left=px+16,top=py+16;
+  if(left+pw>vw-8)left=Math.max(8,px-pw-16);
+  if(left+pw>vw-8)left=Math.max(8,vw-pw-8);
+  if(top+ph>vh-8)top=Math.max(8,py-ph-16);
+  pop.style.left=left+'px';pop.style.top=top+'px';
+}
+function showPop(n,px,py,pin){
+  var e=byId(n.dataset.id);if(!e)return;
+  pop.innerHTML=popHtml(e);pop.hidden=false;pop.classList.toggle('pin',!!pin);placePop(px,py);
+  Array.prototype.forEach.call(cal.querySelectorAll('[data-id="'+e.id+'"]'),function(q){q.classList.add('hl');});
+  var xb=pop.querySelector('.x');if(xb)xb.onclick=function(ev){ev.stopPropagation();hidePop(true);};
+}
+function hidePop(force){
+  if(pinned&&!force)return;
+  if(force){pinned=null;pop.dataset.id='';}
+  pop.hidden=true;pop.classList.remove('pin');
+  Array.prototype.forEach.call(cal.querySelectorAll('.hl'),function(q){q.classList.remove('hl');});
+}
+cal.addEventListener('mousemove',function(ev){
+  if(pinned)return;var n=ev.target.closest('[data-id]');
+  if(!n){hidePop();return;}
+  if(pop.hidden||pop.dataset.id!==n.dataset.id){hidePop(true);pop.dataset.id=n.dataset.id;showPop(n,ev.clientX,ev.clientY,false);}
+  else placePop(ev.clientX,ev.clientY);
+});
+cal.addEventListener('mouseleave',function(){if(!pinned)hidePop(true);});
+cal.addEventListener('click',function(ev){
+  var n=ev.target.closest('[data-id]');if(!n)return;
+  ev.stopPropagation();
+  if(pinned===n.dataset.id){hidePop(true);return;}
+  hidePop(true);pinned=n.dataset.id;pop.dataset.id=n.dataset.id;var r=n.getBoundingClientRect();
+  showPop(n,Math.min(ev.clientX||r.left,r.right),r.bottom-16,true);
+});
+cal.addEventListener('focusin',function(ev){
+  var n=ev.target.closest('.ev');if(!n||pinned)return;var r=n.getBoundingClientRect();
+  hidePop(true);showPop(n,r.left,r.bottom-16,false);
+});
+cal.addEventListener('focusout',function(){if(!pinned)hidePop(true);});
+document.addEventListener('click',function(ev){if(pinned&&!pop.contains(ev.target))hidePop(true);});
+document.addEventListener('keydown',function(ev){if(ev.key==='Escape')hidePop(true);});
+window.addEventListener('scroll',function(){if(!pinned)hidePop(true);},{passive:true});
+
+/* view + language */
+function setView(v){document.body.classList.toggle('vl',v==='l');$('vc').setAttribute('aria-pressed',v==='c'?'true':'false');$('vl').setAttribute('aria-pressed',v==='l'?'true':'false');hidePop(true);}
+$('y0').onclick=function(){show(cur%12);};
+$('y1').onclick=function(){show(12+cur%12);};
+$('vc').onclick=function(){setView('c');};
+$('vl').onclick=function(){setView('l');};
+function setLang(l){lang=l;try{localStorage.setItem('tasa-lang',l);}catch(e){}hidePop(true);renderStatic();renderCal();}
+document.addEventListener('click',function(ev){var b=ev.target.closest&&ev.target.closest('.lb');if(b)setLang(b.dataset.l);});
+$('ftcopy').onclick=function(){
+  var b=$('ftcopy'),mail='thaitaa@thaiaquatics.or.th';
+  function ok(){b.textContent=t().copied;setTimeout(function(){b.textContent=t().copy;},1500);}
+  try{navigator.clipboard.writeText(mail).then(ok,function(){sel();});}catch(e){sel();}
+  function sel(){var r=document.createRange();r.selectNodeContents($('ftmail'));var s=window.getSelection();s.removeAllRanges();s.addRange(r);}
+};
+var mb=$('minibar'),hd=$('apphd'),tick=false;
+function updMini(){tick=false;var on=window.pageYOffset>hd.offsetHeight-8;mb.classList.toggle('show',on);}
+window.addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(updMini);}},{passive:true});
+window.addEventListener('resize',updMini);updMini();
+setView(window.innerWidth<=640?'l':'c');
+renderStatic();renderCal();
+})();
+</script>
