@@ -557,7 +557,11 @@ address{font-style:normal;font-size:13px;line-height:1.7;margin-bottom:4px}
     {
      "th": "ประจำสำนักงาน",
      "en": "Office-based staff",
-     "names": []
+     "names": [
+      {
+       "th": "นางสาวชาลินี ยึดเขียว"
+      }
+     ]
     }
    ]
   }
@@ -642,8 +646,14 @@ function showOrg(){
   var list=isOff?ORG.office.positions:d.positions;
   $('orgroot').setAttribute('aria-pressed',isOff?'true':'false');
   Array.prototype.forEach.call(document.querySelectorAll('.dept-btn'),function(x){x.setAttribute('aria-pressed',(!isOff&&x.dataset.id===d.id)?'true':'false');});
+  /* people who hold several positions in the same department are shown once, with all their positions listed under the name */
+  var rows=[],idx={};
+  list.forEach(function(q){var nm=pnames(q),key=nm.join('|');
+    if(key&&idx[key]!==undefined){rows[idx[key]].titles.push(ptitle(q));}
+    else{if(key)idx[key]=rows.length;rows.push({nm:nm,titles:[ptitle(q)],qty:q.qty});}});
   $('orgpanel').innerHTML='<h3>'+esc(isOff?o.officeH+' ('+(lang==='en'?'SECOFF':ORG.office.abbr)+')':dname(d))+'</h3><p class="lead">'+(isOff?'':esc(o.posh)+' · ')+esc(o.cnt(list.length))+'</p><ul class="pos">'+
-    list.map(function(q){var nm=pnames(q);return '<li><span class="dot"></span><span class="nm">'+(nm.length?'<span class="who">'+esc(nm.join(', '))+'</span><small>'+esc(ptitle(q))+'</small>':esc(ptitle(q)))+'</span>'+(q.qty>1?'<span class="qty">× '+q.qty+'</span>':'')+'</li>';}).join('')+'</ul><p class="org-note">'+esc(o.note)+'</p>';
+    rows.map(function(r){return '<li><span class="dot"></span><span class="nm">'+(r.nm.length?'<span class="who">'+esc(r.nm.join(', '))+'</span>':'')+
+      r.titles.map(function(tt){return r.nm.length?'<small>'+esc(tt)+'</small>':esc(tt);}).join('')+'</span>'+(r.qty>1?'<span class="qty">× '+r.qty+'</span>':'')+'</li>';}).join('')+'</ul><p class="org-note">'+esc(o.note)+'</p>';
 }
 document.addEventListener('click',function(ev){
   var r=ev.target.closest&&ev.target.closest('#orgroot'),b=ev.target.closest&&ev.target.closest('.dept-btn');
