@@ -42,6 +42,9 @@ var ALLOWED_EXT = {
 // รายงานรายเรื่อง (สร้างจากเมนู TASA Integrity ใน Google Sheet)
 var REPORT_FONT = 'Sarabun';       // ฟอนต์ไทยที่ Google Docs มีให้ (แทน TH Sarabun New)
 var MAX_REPORTS_PER_RUN = 15;      // จำนวนรายงานสูงสุดต่อการกด 1 ครั้ง (ข้อจำกัดเวลาของ Apps Script)
+// เทมเพลตกระดาษหัวจดหมาย TASA (Google Doc ที่แปลงจาก TASA_Report_Template.docx)
+// วางลิงก์หรือรหัสไฟล์ตรงนี้ หรือตั้งผ่านเมนู TASA Integrity > ตั้งค่าเทมเพลตกระดาษ (เมนูมีผลก่อน)
+var TEMPLATE_DOC_ID = '';
 
 var FILES_HEADER = 'ไฟล์หลักฐาน (Google Drive)';
 var REPORT_HEADER = 'รายงานเรื่อง (Doc | PDF)';
@@ -292,7 +295,49 @@ function onOpen() {
   SpreadsheetApp.getUi().createMenu('TASA Integrity')
     .addItem('สร้างรายงานของเรื่องที่เลือก', 'generateSelectedReports')
     .addItem('สร้างรายงานของเรื่องที่ยังไม่มีรายงาน', 'generateMissingReports')
+    .addSeparator()
+    .addItem('ตั้งค่าเทมเพลตกระดาษหัวจดหมาย', 'setReportTemplate')
     .addToUi();
+}
+
+/* ---------- เทมเพลตกระดาษหัวจดหมาย ---------- */
+
+function parseDocId_(v) {
+  v = String(v || '').trim();
+  var m = v.match(/\/d\/([A-Za-z0-9_-]{20,})/);
+  if (m) return m[1];
+  return /^[A-Za-z0-9_-]{20,}$/.test(v) ? v : '';
+}
+
+function templateId_() {
+  return parseDocId_(PropertiesService.getScriptProperties().getProperty('TEMPLATE_ID')) || parseDocId_(TEMPLATE_DOC_ID);
+}
+
+// เมนู: วางลิงก์ Google Doc ของเทมเพลต (เว้นว่างแล้วกดตกลง = ยกเลิกเทมเพลต กลับไปใช้กระดาษเปล่า)
+function setReportTemplate() {
+  var ui = SpreadsheetApp.getUi(), props = PropertiesService.getScriptProperties();
+  var cur = templateId_();
+  var res = ui.prompt('ตั้งค่าเทมเพลตกระดาษหัวจดหมาย',
+    'วางลิงก์ของ Google Doc ที่เปิดจากไฟล์ TASA_Report_Template.docx (ต้องเป็น Google Docs ไม่ใช่ไฟล์ .docx)\n' +
+    'เว้นว่างแล้วกดตกลง = ยกเลิกเทมเพลต\n' + (cur ? '\nปัจจุบันใช้รหัสไฟล์: ' + cur : '\nปัจจุบัน: ยังไม่ได้ตั้งค่า'), ui.ButtonSet.OK_CANCEL);
+  if (res.getSelectedButton() !== ui.Button.OK) return;
+  var text = String(res.getResponseText() || '').trim();
+  if (!text) { props.deleteProperty('TEMPLATE_ID'); ui.alert('ยกเลิกเทมเพลตแล้ว รายงานจะสร้างบนกระดาษเปล่า'); return; }
+  var id = parseDocId_(text);
+  if (!id) { ui.alert('อ่านลิงก์ไม่ได้ โปรดคัดลอกลิงก์จากแถบที่อยู่ของ Google Doc ทั้งหมด'); return; }
+  try {
+    var f = DriveApp.getFileById(id);
+    if (f.getMimeType() !== 'application/vnd.google-apps.document') {
+      ui.alert('ไฟล์นี้ยังไม่ใช่ Google Docs\nให้เปิดไฟล์ด้วย Google Docs แล้วเลือก ไฟล์ > บันทึกเป็น Google Docs จากนั้นนำลิงก์ของไฟล์ใหม่มาวาง');
+      return;
+    }
+    DocumentApp.openById(id);
+  } catch (e) {
+    ui.alert('เปิดไฟล์ไม่ได้: ' + e.message + '\nโปรดตรวจสอบว่าบัญชีนี้มีสิทธิ์เข้าถึงไฟล์');
+    return;
+  }
+  props.setProperty('TEMPLATE_ID', id);
+  ui.alert('ตั้งค่าเทมเพลตเรียบร้อย รายงานที่สร้างต่อไปจะใช้กระดาษหัวจดหมายนี้');
 }
 
 // สร้างรายงานของแถวที่คลิกเลือกอยู่ (เลือกได้หลายแถว)
@@ -321,12 +366,13 @@ function generateMissingReports() {
 function runReports_(sh, rows) {
   var ui = SpreadsheetApp.getUi();
   if (!rows.length) { ui.alert('ไม่พบเรื่องที่ต้องสร้างรายงาน'); return; }
-  var todo = rows.slice(0, MAX_REPORTS_PER_RUN), ok = [], fail = [];
+  var todo = rows.slice(0, MAX_REPORTS_PER_RUN), ok = [], fail = [], warn = '';
   todo.forEach(function (r) {
-    try { ok.push(makeReport_(sh, r)); } catch (e) { fail.push('แถว ' + r + ': ' + e.message); }
+    try { var m = makeReport_(sh, r); ok.push(m.ref); if (m.warn) warn = m.warn; } catch (e) { fail.push('แถว ' + r + ': ' + e.message); }
   });
   var msg = 'สร้างรายงานสำเร็จ ' + ok.length + ' เรื่อง' + (ok.length ? '\n' + ok.join('\n') : '');
   if (rows.length > todo.length) msg += '\n\nเหลืออีก ' + (rows.length - todo.length) + ' เรื่อง กดเมนูอีกครั้งเพื่อสร้างต่อ';
+  if (warn) msg += '\n\nหมายเหตุ: ' + warn;
   if (fail.length) msg += '\n\nไม่สำเร็จ:\n' + fail.join('\n');
   msg += '\n\nไฟล์ (Google Doc และ PDF) อยู่ในโฟลเดอร์ของเรื่องนั้นใน Google Drive และมีลิงก์ในคอลัมน์ "' + REPORT_HEADER + '"';
   ui.alert('รายงานเรื่องร้องเรียน', msg, ui.ButtonSet.OK);
@@ -346,7 +392,7 @@ function makeReport_(sh, r) {
   var rich = SpreadsheetApp.newRichTextValue().setText(text)
     .setLinkUrl(0, 3, built.docUrl).setLinkUrl(6, 9, built.pdfUrl).build();
   sh.getRange(r, HEADERS.indexOf(REPORT_HEADER) + 1).setRichTextValue(rich);
-  return ref;
+  return { ref: ref, warn: built.warn || '' };
 }
 
 function caseFolder_(ref) {
@@ -366,21 +412,44 @@ function buildReportDoc_(c, ref, folder) {
     if (f.getName().indexOf('รายงานเรื่องร้องเรียน') !== 0) evidence.push({ name: f.getName(), size: f.getSize(), url: f.getUrl() });
   }
 
-  var doc = DocumentApp.create(name);
-  var body = doc.getBody();
-  body.clear();
-  body.setPageWidth(595.28).setPageHeight(841.89).setMarginTop(56).setMarginBottom(56).setMarginLeft(64).setMarginRight(64);
-  body.setAttributes(style_({ size: 14 }));
+  // เปิดเอกสาร: คัดลอกจากเทมเพลตกระดาษหัวจดหมาย (พื้นหลังและขอบกระดาษมากับเทมเพลต) ถ้าไม่มีหรือเปิดไม่ได้ใช้กระดาษเปล่า
+  var doc = null, warn = '', tid = templateId_(), useTpl = false;
+  if (tid) {
+    try {
+      var copy = DriveApp.getFileById(tid).makeCopy(name, folder);
+      doc = DocumentApp.openById(copy.getId());
+      useTpl = true;
+    } catch (e) {
+      warn = 'เปิดเทมเพลตกระดาษไม่ได้ (' + e.message + ') จึงสร้างบนกระดาษเปล่าแทน';
+    }
+  }
+  var body;
+  if (useTpl) {
+    body = doc.getBody();
+    body.clear();                       // เก็บเฉพาะหัวกระดาษ/ขอบ/พื้นหลังของเทมเพลต
+    body.setAttributes(style_({ size: 14 }));
+    var cp = body.appendParagraph('เอกสารลับ: เฉพาะผู้มีหน้าที่พิจารณาเรื่องร้องเรียนเท่านั้น');
+    cp.setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
+    cp.setAttributes(style_({ size: 11, color: '#9b2c2c', bold: true })).setSpacingAfter(6);
+    centered_(body, 'รายงานข้อมูลการแจ้งเรื่องร้องเรียนด้านความเป็นธรรมทางกีฬา', 18, true, '#000000');
+    centered_(body, 'หมายเลขอ้างอิง ' + ref, 15, true, '#2b6cb0').setSpacingAfter(10);
+  } else {
+    doc = DocumentApp.create(name);
+    body = doc.getBody();
+    body.clear();
+    body.setPageWidth(595.28).setPageHeight(841.89).setMarginTop(56).setMarginBottom(56).setMarginLeft(64).setMarginRight(64);
+    body.setAttributes(style_({ size: 14 }));
 
-  var hp = doc.addHeader().getParagraphs()[0];
-  hp.setText('เอกสารลับ: เฉพาะผู้มีหน้าที่พิจารณาเรื่องร้องเรียนเท่านั้น');
-  hp.setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
-  hp.setAttributes(style_({ size: 11, color: '#9b2c2c', bold: true }));
+    var hp = doc.addHeader().getParagraphs()[0];
+    hp.setText('เอกสารลับ: เฉพาะผู้มีหน้าที่พิจารณาเรื่องร้องเรียนเท่านั้น');
+    hp.setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
+    hp.setAttributes(style_({ size: 11, color: '#9b2c2c', bold: true }));
 
-  centered_(body, 'สมาคมกีฬาทางน้ำแห่งประเทศไทย', 16, true, '#1a365d');
-  centered_(body, 'ฝ่ายกิจการต่างประเทศ', 14, false, '#1a365d');
-  centered_(body, 'รายงานข้อมูลการแจ้งเรื่องร้องเรียนด้านความเป็นธรรมทางกีฬา', 18, true, '#000000').setSpacingBefore(10);
-  centered_(body, 'หมายเลขอ้างอิง ' + ref, 15, true, '#2b6cb0').setSpacingAfter(10);
+    centered_(body, 'สมาคมกีฬาทางน้ำแห่งประเทศไทย', 16, true, '#1a365d');
+    centered_(body, 'ฝ่ายกิจการต่างประเทศ', 14, false, '#1a365d');
+    centered_(body, 'รายงานข้อมูลการแจ้งเรื่องร้องเรียนด้านความเป็นธรรมทางกีฬา', 18, true, '#000000').setSpacingBefore(10);
+    centered_(body, 'หมายเลขอ้างอิง ' + ref, 15, true, '#2b6cb0').setSpacingAfter(10);
+  }
 
   var anon = String(c['ไม่ระบุตัวตน'] || '') === 'ใช่';
   var cats = splitList_(c['ประเภทเรื่อง']), subs = splitList_(c['ลักษณะการกระทำ']);
@@ -446,9 +515,9 @@ function buildReportDoc_(c, ref, folder) {
 
   doc.saveAndClose();
   var docFile = DriveApp.getFileById(doc.getId());
-  docFile.moveTo(folder);
+  if (!useTpl) docFile.moveTo(folder);     // สำเนาจากเทมเพลตอยู่ในโฟลเดอร์ของเรื่องแล้ว
   var pdf = folder.createFile(docFile.getAs('application/pdf')).setName(name + '.pdf');
-  return { docUrl: docFile.getUrl(), pdfUrl: pdf.getUrl() };
+  return { docUrl: docFile.getUrl(), pdfUrl: pdf.getUrl(), warn: warn };
 }
 
 function style_(o) {
