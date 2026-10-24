@@ -306,6 +306,9 @@ try{var sv=localStorage.getItem('tasa-lang');if(sv==='th'||sv==='en')lang=sv;els
 
 var SPORTS=['swim','polo','dive','art','open','mas'];
 var COLOR={swim:'var(--swim)',polo:'var(--polo)',dive:'var(--dive)',art:'var(--art)',open:'var(--open)',mas:'var(--mas)'};
+/* multi-sport events (sport "multi") list their sports in parts[] */
+function sportsOf(e){if(e.sport!=='multi')return [e.sport];var o=[];(e.parts||[]).forEach(function(p){if(o.indexOf(p.sport)<0)o.push(p.sport);});return o;}
+function tagBg(e){var s=sportsOf(e);return s.length>1?'linear-gradient(90deg,'+s.map(function(k){return COLOR[k];}).join(',')+')':(COLOR[s[0]]||'var(--swim)');}
 var M_TH=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
 var M_THF=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
 var M_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -323,7 +326,7 @@ th:{
   stEv:'รายการแข่งขันในปฏิทิน',stSp:'ชนิดกีฬา',stYr:'ช่วงเวลาที่ครอบคลุม',stUp:'ตรวจสอบข้อมูลล่าสุด',
   yrs:'พ.ศ. 2570–2571',
   hSports:'ชนิดกีฬาที่ติดตาม',lSports:'รายการแข่งขันระดับ Tier 1–4 ตามเกณฑ์ World Aquatics',
-  sport:{swim:'ว่ายน้ำ',polo:'โปโลน้ำ',dive:'กระโดดน้ำ',art:'ว่ายน้ำลีลา',open:'ว่ายน้ำโอเพ่นวอเตอร์',mas:'กีฬาทางน้ำมาสเตอร์'},
+  sport:{swim:'ว่ายน้ำ',polo:'โปโลน้ำ',dive:'กระโดดน้ำ',art:'ว่ายน้ำลีลา',open:'ว่ายน้ำโอเพ่นวอเตอร์',mas:'กีฬาทางน้ำมาสเตอร์',multi:'หลายประเภทกีฬา'},
   cnt:function(n){return n+' รายการ';},next:'รายการถัดไป',none:'ยังไม่มีรายการ',
   hUp:'รายการแข่งขันที่ใกล้ถึง',lUp:'6 รายการถัดไปในปฏิทิน (ข้อมูลอัปเดตทุก 3 วัน)',
   aboutMore:'ดูข้อมูลฝ่ายกิจการต่างประเทศเพิ่มเติม »',more:'ดูปฏิทินทั้งหมด »',noData:'ไม่สามารถโหลดรายการล่าสุดได้ในขณะนี้ กรุณาดูที่หน้าปฏิทินการแข่งขัน',
@@ -348,7 +351,7 @@ en:{
   stEv:'Events in the calendar',stSp:'Disciplines',stYr:'Years covered',stUp:'Last checked',
   yrs:'2027–2028',
   hSports:'Disciplines we follow',lSports:'Tier 1–4 events under the World Aquatics classification',
-  sport:{swim:'Swimming',polo:'Water Polo',dive:'Diving',art:'Artistic Swimming',open:'Open Water Swimming',mas:'Masters Aquatics'},
+  sport:{swim:'Swimming',polo:'Water Polo',dive:'Diving',art:'Artistic Swimming',open:'Open Water Swimming',mas:'Masters Aquatics',multi:'Multi-sport'},
   cnt:function(n){return n+(n===1?' event':' events');},next:'Next',none:'No events yet',
   hUp:'Upcoming competitions',lUp:'The next 6 events in the calendar (data refreshed every 3 days)',
   aboutMore:'More about the department »',more:'See the full calendar »',noData:'The latest events could not be loaded right now. Please see the competition calendar.',
@@ -411,8 +414,8 @@ function render(){
   $('h-sports').textContent=x.hSports;$('l-sports').textContent=x.lSports;
   var up=upcoming();
   $('sportgrid').innerHTML=SPORTS.map(function(k){
-    var all=EVENTS.filter(function(e){return e.sport===k;});
-    var nx=up.filter(function(o){return o.e.sport===k;})[0];
+    var all=EVENTS.filter(function(e){return sportsOf(e).indexOf(k)>=0;});
+    var nx=up.filter(function(o){return sportsOf(o.e).indexOf(k)>=0;})[0];
     var line=!LOADED?'':(nx?'<i>'+esc(x.next)+':</i> '+esc(L(nx.e,'name'))+' · '+esc(fmtDate(nx.e)):'<i>'+esc(x.none)+'</i>');
     return '<div class="sp" style="--c:'+COLOR[k]+'"><h3>'+esc(x.sport[k])+'</h3><div class="n">'+(LOADED?esc(x.cnt(all.length)):'')+'</div><div class="nx">'+line+'</div></div>';
   }).join('');
@@ -425,7 +428,7 @@ function render(){
     $('uplist').innerHTML=up.slice(0,6).map(function(o){
       var e=o.e,c=[L(e,'city'),L(e,'country')].filter(Boolean).join(', ');
       return '<li><div class="dt">'+esc(fmtDate(e))+'</div><div class="nm">'+esc(L(e,'name'))+(c?'<small>'+esc(c)+'</small>':'')+'</div>'+
-        '<span class="tag" style="--c:'+COLOR[e.sport]+'"><b>T'+esc(e.tier)+'</b>'+esc(x.sport[e.sport]||'')+'</span></li>';
+        '<span class="tag" style="--c:'+COLOR[sportsOf(e)[0]]+';background:'+tagBg(e)+'"><b>T'+esc(e.tier)+'</b>'+esc(x.sport[e.sport]||'')+'</span></li>';
     }).join('');
   }
   var cl=DATA&&DATA.changelog&&DATA.changelog[0];
