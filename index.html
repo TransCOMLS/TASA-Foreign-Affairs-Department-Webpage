@@ -85,13 +85,13 @@ button:focus-visible,select:focus-visible,.ev:focus-visible,.chip:focus-visible,
 .chips h3{margin:0;font-size:13px;color:var(--muted);font-weight:600}
 .chip{font-size:13px;padding:3px 12px;border-radius:999px;color:#fff;font-weight:500;cursor:pointer;border:0;font-family:var(--font);text-align:left}
 .empty{color:var(--muted);margin:14px 0 0;font-size:13px}
-.pop{position:fixed;z-index:50;width:min(340px,calc(100vw - 24px));background:var(--pop);color:var(--ink);border:1px solid var(--pop-line);border-radius:12px;padding:0;box-shadow:0 12px 32px rgba(0,0,0,.22);pointer-events:none;overflow:hidden;font-size:13px}
+.pop{position:fixed;z-index:120;display:flex;flex-direction:column;max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);width:min(340px,calc(100vw - 24px));background:var(--pop);color:var(--ink);border:1px solid var(--pop-line);border-radius:12px;padding:0;box-shadow:0 12px 32px rgba(0,0,0,.22);pointer-events:none;overflow:hidden;font-size:13px}
 .pop[hidden]{display:none!important}
 .pop.pin{pointer-events:auto}
-.pop .top{padding:10px 14px;color:#fff}
+.pop .top{flex:none;padding:10px 14px;color:#fff}
 .pop .top .k{font-size:12px;opacity:.9;font-weight:500}
 .pop .top .t{font-size:16px;font-weight:700;line-height:1.35}
-.pop dl{margin:0;padding:10px 14px 12px;display:grid;grid-template-columns:78px minmax(0,1fr);gap:5px 10px}
+.pop dl{min-height:0;overflow-y:auto;overscroll-behavior:contain;margin:0;padding:10px 14px 12px;display:grid;grid-template-columns:78px minmax(0,1fr);gap:5px 10px}
 .pop dt{color:var(--muted)}
 .pop dd{margin:0;overflow-wrap:anywhere}
 .pop dd.na{color:var(--muted);font-style:italic}
@@ -524,6 +524,7 @@ function placePop(px,py){
   if(left+pw>vw-8)left=Math.max(8,px-pw-16);
   if(left+pw>vw-8)left=Math.max(8,vw-pw-8);
   if(top+ph>vh-8)top=Math.max(8,py-ph-16);
+  top=Math.max(8,Math.min(top,vh-ph-8)); /* tall cards stay fully on screen; the body scrolls if taller than the viewport */
   pop.style.left=left+'px';pop.style.top=top+'px';
 }
 function showPop(n,px,py,pin){
