@@ -120,6 +120,14 @@ h2{margin:0 0 4px;font-size:22px;font-weight:700;color:var(--primary);text-wrap:
 .sp-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
 .sp-list li{display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:12px;height:84px;padding:10px 14px}
 .sp-list img{display:block;max-height:100%;max-width:100%;width:auto;height:auto;object-fit:contain}
+/* sponsor strip scrolls continuously (logos duplicated by script); static grid when reduced motion is preferred */
+.sp-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.sp-list.marquee{display:flex;flex-wrap:nowrap;width:max-content;animation:spScroll 32s linear infinite}
+.sp-list.marquee li{flex:none;width:180px;transition:transform .2s,box-shadow .2s}
+.sp-list.marquee li:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.sp-view:hover .marquee,.sp-view:focus-within .marquee{animation-play-state:paused}
+@keyframes spScroll{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 6px))}}
+@media (max-width:640px){.sp-list.marquee li{width:140px}}
 .app-footer{background:var(--ft-bg);color:var(--ft-ink);border-top:4px solid var(--ft-top);padding-block:28px}
 .ft-in{display:flex;flex-direction:column;align-items:center;gap:14px}
 .ft-main{display:flex;align-items:center;gap:24px;width:100%;max-width:900px}
@@ -453,6 +461,11 @@ $('ftcopy').addEventListener('click',function(){
 });
 
 render();
+/* sponsor strip: duplicate logos once so the CSS marquee loops seamlessly */
+(function(){var ul=document.querySelector('.sp-list');if(!ul||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))return;
+  var wrap=document.createElement('div');wrap.className='sp-view';ul.parentNode.insertBefore(wrap,ul);wrap.appendChild(ul);
+  Array.prototype.slice.call(ul.children).forEach(function(li){var c=li.cloneNode(true);c.setAttribute('aria-hidden','true');var im=c.querySelector('img');if(im)im.alt='';ul.appendChild(c);});
+  ul.classList.add('marquee');})();
 
 // Load events from the calendar page (index.html) so both pages always show the same data.
 fetch('index.html',{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.text();}).then(function(h){
