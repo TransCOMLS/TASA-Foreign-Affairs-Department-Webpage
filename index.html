@@ -810,7 +810,7 @@ function excelRows(P){
     r[cols[2]]=(tmp.querySelector('.top .t')||{}).textContent||'';
     Array.prototype.forEach.call(tmp.querySelectorAll('dl dt'),function(dt){
       var dd=dt.nextElementSibling;if(!dd)return;
-      var k=dt.textContent.trim(),v=flatText(dd).replace(/( · )+/g,' · ');
+      var k=dt.textContent.trim(),v=flatText(dd).replace(/(\s*·\s*){2,}/g,' · ');
       if(k===x.tierlbl){
         v=x.tiername(e.tier);
         var tn=dd.querySelector('.tiernote');if(tn)tierNote[e.tier]=tn.textContent.replace(/\s+/g,' ').trim();
